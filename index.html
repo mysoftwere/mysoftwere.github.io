@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MySoftwere - Free Software Download</title>
+
+<meta name="description" content="Download useful Windows software, Android apps, internet tools and technology applications.">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+:root{
+    --bg:#0b1220;
+    --card:#121d30;
+    --header:#101a2d;
+    --text:#ffffff;
+    --muted:#9aaac0;
+    --blue:#1683ff;
+    --border:#263957;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    transition:0.3s;
+}
+
+/* Light Mode */
+
+body.light{
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --header:#ffffff;
+    --text:#111827;
+    --muted:#64748b;
+    --border:#dbe3ef;
+}
+
+/* Header */
+
+header{
+    background:var(--header);
+    border-bottom:1px solid var(--border);
+    padding:16px 6%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:sticky;
+    top:0;
+    z-index:999;
+}
+
+.logo{
+    font-size:26px;
+    font-weight:bold;
+    color:#1683ff;
+}
+
+.logo span{
+    color:var(--text);
+}
+
+nav{
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+
+nav a{
+    color:var(--muted);
+    text-decoration:none;
+    font-size:15px;
+}
+
+nav a:hover{
+    color:#1683ff;
+}
+
+.mode-btn{
+    border:none;
+    background:#1c304d;
+    color:white;
+    padding:9px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+/* Hero */
+
+.hero{
+    padding:85px 6%;
+    text-align:center;
+    background:
+    radial-gradient(circle at top right,#12365f,transparent 45%),
+    linear-gradient(135deg,#0b1220,#101c31);
+}
+
+.hero h1{
+    font-size:46px;
+    line-height:1.2;
+    margin-bottom:20px;
+}
+
+.hero h1 span{
+    color:#1683ff;
+}
+
+.hero p{
+    color:#aebdd0;
+    max-width:650px;
+    margin:auto;
+    font-size:17px;
+    line-height:1.7;
+}
+
+/* Search */
+
+.search-container{
+    max-width:650px;
+    margin:35px auto 0;
+    display:flex;
+    background:white;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.search-container input{
+    flex:1;
+    padding:17px;
+    border:none;
+    outline:none;
+    font-size:15px;
+    color:#222;
+}
+
+.search-container button{
+    background:#1683ff;
+    color:white;
+    border:none;
+    padding:0 28px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+/* Main */
+
+.container{
+    width:88%;
+    max-width:1250px;
+    margin:50px auto;
+}
+
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.section-header h2{
+    font-size:27px;
+}
+
+.section-header span{
+    color:#1683ff;
+}
+
+/* Categories */
+
+.categories{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:55px;
+}
+
+.category-btn{
+    background:var(--card);
+    border:1px solid var(--border);
+    color:var(--muted);
+    padding:11px 20px;
+    border-radius:25px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.category-btn:hover,
+.category-btn.active{
+    background:#1683ff;
+    color:white;
+    border-color:#1683ff;
+}
+
+/* Featured */
+
+.featured{
+    background:linear-gradient(135deg,#12325b,#142a47);
+    border-radius:15px;
+    padding:35px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:60px;
+    border:1px solid #24466e;
+}
+
+.featured-text{
+    max-width:650px;
+}
+
+.featured h2{
+    font-size:31px;
+    margin-bottom:15px;
+}
+
+.featured p{
+    color:#bdcde0;
+    line-height:1.7;
+}
+
+.featured-icon{
+    font-size:90px;
+}
+
+.primary-btn{
+    display:inline-block;
+    margin-top:20px;
+    background:#1683ff;
+    color:white;
+    padding:13px 25px;
+    border-radius:7px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+/* Software Grid */
+
+.software-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+    gap:25px;
+}
+
+.software-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:13px;
+    padding:22px;
+    transition:0.3s;
+    position:relative;
+    overflow:hidden;
+}
+
+.software-card:hover{
+    transform:translateY(-6px);
+    border-color:#1683ff;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+}
+
+.software-icon{
+    width:65px;
+    height:65px;
+    border-radius:14px;
+    background:#1b3558;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:30px;
+    margin-bottom:18px;
+}
+
+.software-card h3{
+    font-size:19px;
+    margin-bottom:9px;
+}
+
+.software-card p{
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.6;
+    min-height:45px;
+}
+
+.info{
+    display:flex;
+    gap:10px;
+    margin-top:16px;
+    flex-wrap:wrap;
+}
+
+.info span{
+    font-size:12px;
+    background:rgba(22,131,255,0.12);
+    color:#1683ff;
+    padding:5px 9px;
+    border-radius:5px;
+}
+
+.card-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:20px;
+}
+
+.details-btn{
+    background:#1683ff;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.download-link{
+    color:#1683ff;
+    text-decoration:none;
+    font-size:13px;
+}
+
+/* Latest Section */
+
+.latest{
+    margin-top:65px;
+}
+
+.latest-item{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:18px;
+    border-radius:10px;
+    margin-bottom:12px;
+}
+
+.latest-icon{
+    width:48px;
+    height:48px;
+    background:#1b3558;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:23px;
+}
+
+.latest-item h4{
+    margin-bottom:5px;
+}
+
+.latest-item p{
+    color:var(--muted);
+    font-size:13px;
+}
+
+/* Empty Search */
+
+.no-result{
+    text-align:center;
+    padding:50px;
+    color:var(--muted);
+    display:none;
+}
+
+/* Modal */
+
+.modal{
+    display:none;
+    position:fixed;
+    z-index:2000;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.75);
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.modal-content{
+    background:var(--card);
+    border:1px solid var(--border);
+    max-width:550px;
+    width:100%;
+    padding:30px;
+    border-radius:15px;
+    position:relative;
+}
+
+.close{
+    position:absolute;
+    right:20px;
+    top:15px;
+    font-size:25px;
+    cursor:pointer;
+    color:var(--muted);
+}
+
+.modal-content h2{
+    margin-bottom:15px;
+}
+
+.modal-content p{
+    color:var(--muted);
+    line-height:1.7;
+    margin-bottom:20px;
+}
+
+.modal-info{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.modal-info div{
+    background:rgba(22,131,255,0.08);
+    padding:12px;
+    border-radius:7px;
+    font-size:13px;
+}
+
+.modal-info strong{
+    display:block;
+    color:#1683ff;
+    margin-bottom:4px;
+}
+
+/* Footer */
+
+footer{
+    background:#080e18;
+    padding:45px 6%;
+    margin-top:80px;
+    text-align:center;
+    color:#8797ac;
+}
+
+footer .logo{
+    margin-bottom:15px;
+}
+
+footer p{
+    font-size:14px;
+    line-height:1.8;
+}
+
+.footer-links{
+    margin-top:20px;
+}
+
+.footer-links a{
+    color:#1683ff;
+    text-decoration:none;
+    margin:0 10px;
+    font-size:14px;
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+    header{
+        padding:15px 5%;
+    }
+
+    nav{
+        gap:10px;
+    }
+
+    nav a{
+        display:none;
+    }
+
+    .hero{
+        padding:60px 5%;
+    }
+
+    .hero h1{
+        font-size:32px;
+    }
+
+    .hero p{
+        font-size:15px;
+    }
+
+    .search-container{
+        display:flex;
+    }
+
+    .search-container button{
+        padding:0 18px;
+    }
+
+    .container{
+        width:90%;
+    }
+
+    .featured{
+        flex-direction:column;
+        text-align:center;
+        gap:25px;
+    }
+
+    .featured h2{
+        font-size:25px;
+    }
+
+    .featured-icon{
+        font-size:60px;
+    }
+
+    .section-header h2{
+        font-size:23px;
+    }
+
+    .modal-info{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header>
+
+```
+<div class="logo">
+    My<span>Softwere</span>
+</div>
+
+<nav>
+    <a href="#home">Home</a>
+    <a href="#software">Software</a>
+    <a href="#categories">Categories</a>
+    <a href="#latest">Latest</a>
+    <a href="#contact">Contact</a>
+
+    <button class="mode-btn" onclick="toggleMode()">🌙</button>
+</nav>
+```
+
+</header>
+
+<!-- HERO -->
+
+<section class="hero" id="home">
+
+```
+<h1>Download Your Favorite <span>Software</span></h1>
+
+<p>
+    Explore useful software, applications and digital tools.
+    Find everything you need for Windows, Android and Technology.
+</p>
+
+<div class="search-container">
+    <input
+    type="text"
+    id="searchInput"
+    placeholder="Search software..."
+    onkeyup="searchSoftware()">
+
+    <button onclick="searchSoftware()">Search</button>
+</div>
+```
+
+</section>
+
+<!-- MAIN CONTENT -->
+
+<div class="container">
+
+```
+<!-- CATEGORIES -->
+
+<div id="categories">
+
+    <div class="section-header">
+        <h2>Browse <span>Categories</span></h2>
+    </div>
+
+    <div class="categories">
+
+        <button class="category-btn active" onclick="filterCategory('all',this)">
+            All Software
+        </button>
+
+        <button class="category-btn" onclick="filterCategory('windows',this)">
+            Windows
+        </button>
+
+        <button class="category-btn" onclick="filterCategory('android',this)">
+            Android
+        </button>
+
+        <button class="category-btn" onclick="filterCategory('internet',this)">
+            Internet
+        </button>
+
+        <button class="category-btn" onclick="filterCategory('graphics',this)">
+            Graphics
+        </button>
+
+        <button class="category-btn" onclick="filterCategory('security',this)">
+            Security
+        </button>
+
+        <button class="category-btn" onclick="filterCategory('education',this)">
+            Education
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- FEATURED -->
+
+<section class="featured">
+
+    <div class="featured-text">
+
+        <h2>Welcome to MySoftwere</h2>
+
+        <p>
+            A modern software discovery platform where you can find
+            useful applications, tools and technology resources.
+        </p>
+
+        <a href="#software" class="primary-btn">
+            Explore Software
+        </a>
+
+    </div>
+
+    <div class="featured-icon">
+        💻
+    </div>
+
+</section>
+
+
+<!-- SOFTWARE -->
+
+<section id="software">
+
+    <div class="section-header">
+        <h2>Featured <span>Software</span></h2>
+    </div>
+
+
+    <div class="software-grid" id="softwareGrid">
+
+
+        <!-- SOFTWARE 1 -->
+
+        <div class="software-card" data-category="windows" data-name="VLC Media Player">
+
+            <div class="software-icon">🎬</div>
+
+            <h3>VLC Media Player</h3>
+
+            <p>
+                Powerful media player supporting almost all video and audio formats.
+            </p>
+
+            <div class="info">
+                <span>Windows</span>
+                <span>Free</span>
+                <span>32/64 Bit</span>
+            </div>
+
+            <div class="card-bottom">
+
+                <button class="details-btn"
+                onclick="openModal('VLC Media Player','A powerful open-source multimedia player for Windows, Linux and macOS.','3.0.21','Windows 7/10/11','45 MB')">
+                Details
+                </button>
+
+                <a href="#" class="download-link">Download →</a>
+
+            </div>
+
+        </div>
+
+
+        <!-- SOFTWARE 2 -->
+
+        <div class="software-card" data-category="windows" data-name="Google Chrome">
+
+            <div class="software-icon">🌐</div>
+
+            <h3>Google Chrome</h3>
+
+            <p>
+                Fast and secure web browser for browsing the internet.
+            </p>
+
+            <div class="info">
+                <span>Windows</span>
+                <span>Browser</span>
+                <span>Free</span>
+            </div>
+
+            <div class="card-bottom">
+
+                <button class="details-btn"
+                onclick="openModal('Google Chrome','Fast, secure and easy-to-use web browser developed by Google.','Latest','Windows 10/11','120 MB')">
+                Details
+                </button>
+
+                <a href="#" class="download-link">Download →</a>
+
+            </div>
+
+        </div>
+
+
+        <!-- SOFTWARE 3 -->
+
+        <div class="software-card" data-category="android" data-name="Android Utility">
+
+            <div class="software-icon">📱</div>
+
+            <h3>Android Utility</h3>
+
+            <p>
+                Useful tools and applications for Android smartphones.
+            </p>
+
+            <div class="info">
+                <span>Android</span>
+                <span>Utility</span>
+                <span>Free</span>
+            </div>
+
+            <div class="card-bottom">
+
+                <button class="details-btn"
+                onclick="openModal('Android Utility','A collection of useful Android utilities and tools.','1.0','Android 8+','25 MB')">
+                Details
+                </button>
+
+                <a href="#" class="download-link">Download →</a>
+
+            </div>
+
+        </div>
+
+
+        <!-- SOFTWARE 4 -->
+
+        <div class="software-card" data-category="graphics" data-name="Photo Editor">
+
+            <div class="software-icon">🎨</div>
+
+            <h3>Photo Editor</h3>
+
+            <p>
+                Simple and powerful image editing software for beginners.
+            </p>
+
+            <div class="info">
+                <span>Graphics</span>
+                <span>Windows</span>
+                <span>Free</span>
+            </div>
+
+            <div class="card-bottom">
+
+                <button class="details-btn"
+                onclick="openModal('Photo Editor','Easy-to-use photo editing application for creative projects.','2.5','Windows 10/11','85 MB')">
+                Details
+                </button>
+
+                <a href="#" class="download-link">Download →</a>
+
+            </div>
+
+        </div>
+
+
+        <!-- SOFTWARE 5 -->
+
+        <div class="software-card" data-category="internet" data-name="Internet Download Manager">
+
+            <div class="software-icon">⬇️</div>
+
+            <h3>Download Manager</h3>
+
+            <p>
+                Manage and organize your internet downloads efficiently.
+            </p>
+
+            <div class="info">
+                <span>Internet</span>
+                <span>Windows</span>
+                <span>Tool</span>
+            </div>
+
+            <div class="card-bottom">
+
+                <button class="details-btn"
+                onclick="openModal('Download Manager','A useful tool for managing downloads and internet files.','6.0','Windows 10/11','12 MB')">
+                Details
+                </button>
+
+                <a href="#" class="download-link">Download →</a>
+
+            </div>
+
+        </div>
+
+
+        <!-- SOFTWARE 6 -->
+
+        <div class="software-card" data-category="security" data-name="Security Tool">
+
+            <div class="software-icon">🛡️</div>
+
+            <h3>Security Tool</h3>
+
+            <p>
+                Protect your computer with essential security utilities.
+            </p>
+
+            <div class="info">
+                <span>Security</span>
+                <span>Windows</span>
+                <span>Free</span>
+            </div>
+
+            <div class="card-bottom">
+
+                <button class="details-btn"
+                onclick="openModal('Security Tool','Basic security and protection utilities for your computer.','2026','Windows 10/11','30 MB')">
+                Details
+                </button>
+
+                <a href="#" class="download-link">Download →</a>
+
+            </div>
+
+        </div>
+
+
+        <!-- SOFTWARE 7 -->
+
+        <div class="software-card" data-category="education" data-name="Study Tools">
+
+            <div class="software-icon">📚</div>
+
+            <h3>Study Tools</h3>
+
+            <p>
+                Educational software and learning tools for students.
+            </p>
+
+            <div class="info">
+                <span>Education</span>
+                <span>Windows</span>
+                <span>Free</span>
+            </div>
+
+            <div class="card-bottom">
+
+                <button class="details-btn"
+                onclick="openModal('Study Tools','Useful educational tools for students and learners.','1.0','Windows 10/11','20 MB')">
+                Details
+                </button>
+
+                <a href="#" class="download-link">Download →</a>
+
+            </div>
+
+        </div>
+
+
+        <!-- SOFTWARE 8 -->
+
+        <div class="software-card" data-category="internet" data-name="VPN Browser">
+
+            <div class="software-icon">🔒</div>
+
+            <h3>VPN Browser</h3>
+
+            <p>
+                Browse the web with privacy-focused internet tools.
+            </p>
+
+            <div class="info">
+                <span>Internet</span>
+                <span>Privacy</span>
+                <span>Free</span>
+            </div>
+
+            <div class="card-bottom">
+
+                <button class="details-btn"
+                onclick="openModal('VPN Browser','Privacy-focused browsing and internet utility software.','2.0','Windows 10/11','40 MB')">
+                Details
+                </button>
+
+                <a href="#" class="download-link">Download →</a>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="no-result" id="noResult">
+        No software found. Try another search.
+    </div>
+
+</section>
+
+
+<!-- LATEST -->
+
+<section class="latest" id="latest">
+
+    <div class="section-header">
+        <h2>Latest <span>Updates</span></h2>
+    </div>
+
+
+    <div class="latest-item">
+        <div class="latest-icon">🚀</div>
+
+        <div>
+            <h4>New Software Added</h4>
+            <p>Discover new applications and technology tools.</p>
+        </div>
+    </div>
+
+
+    <div class="latest-item">
+        <div class="latest-icon">🔧</div>
+
+        <div>
+            <h4>Software Tools Collection</h4>
+            <p>Useful tools for everyday computer users.</p>
+        </div>
+    </div>
+
+
+    <div class="latest-item">
+        <div class="latest-icon">📢</div>
+
+        <div>
+            <h4>Technology News</h4>
+            <p>Latest updates from the software and technology world.</p>
+        </div>
+    </div>
+
+</section>
+```
+
+</div>
+
+<!-- MODAL -->
+
+<div class="modal" id="softwareModal">
+
+```
+<div class="modal-content">
+
+    <span class="close" onclick="closeModal()">&times;</span>
+
+    <h2 id="modalTitle">Software Name</h2>
+
+    <p id="modalDescription"></p>
+
+    <div class="modal-info">
+
+        <div>
+            <strong>Version</strong>
+            <span id="modalVersion"></span>
+        </div>
+
+        <div>
+            <strong>Operating System</strong>
+            <span id="modalOS"></span>
+        </div>
+
+        <div>
+            <strong>File Size</strong>
+            <span id="modalSize"></span>
+        </div>
+
+        <div>
+            <strong>License</strong>
+            <span>Freeware</span>
+        </div>
+
+    </div>
+
+    <a href="#" class="primary-btn">
+        Download Now
+    </a>
+
+</div>
+```
+
+</div>
+
+<!-- FOOTER -->
+
+<footer id="contact">
+
+```
+<div class="logo">My<span>Softwere</span></div>
+
+<p>
+    Your technology resource for useful software, applications and digital tools.
+</p>
+
+<div class="footer-links">
+    <a href="#home">Home</a>
+    <a href="#software">Software</a>
+    <a href="#categories">Categories</a>
+    <a href="#contact">Contact</a>
+</div>
+
+<p style="margin-top:25px;">
+    © 2026 MySoftwere. All Rights Reserved.
+</p>
+```
+
+</footer>
+
+<script>
+
+/* Dark / Light Mode */
+
+function toggleMode(){
+
+    document.body.classList.toggle("light");
+
+    let button = document.querySelector(".mode-btn");
+
+    if(document.body.classList.contains("light")){
+        button.innerHTML = "☀️";
+    }else{
+        button.innerHTML = "🌙";
+    }
+
+}
+
+
+/* Search Software */
+
+function searchSoftware(){
+
+    let input = document.getElementById("searchInput").value.toLowerCase();
+
+    let cards = document.querySelectorAll(".software-card");
+
+    let found = 0;
+
+    cards.forEach(function(card){
+
+        let name = card.getAttribute("data-name").toLowerCase();
+
+        if(name.includes(input)){
+
+            card.style.display = "block";
+            found++;
+
+        }else{
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+    if(found === 0){
+
+        document.getElementById("noResult").style.display = "block";
+
+    }else{
+
+        document.getElementById("noResult").style.display = "none";
+
+    }
+
+}
+
+
+/* Category Filter */
+
+function filterCategory(category, button){
+
+    let cards = document.querySelectorAll(".software-card");
+
+    document.querySelectorAll(".category-btn").forEach(function(btn){
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    cards.forEach(function(card){
+
+        if(category === "all" || card.getAttribute("data-category") === category){
+
+            card.style.display = "block";
+
+        }else{
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+    document.getElementById("noResult").style.display = "none";
+
+}
+
+
+/* Modal */
+
+function openModal(title,description,version,os,size){
+
+    document.getElementById("modalTitle").innerText = title;
+
+    document.getElementById("modalDescription").innerText = description;
+
+    document.getElementById("modalVersion").innerText = version;
+
+    document.getElementById("modalOS").innerText = os;
+
+    document.getElementById("modalSize").innerText = size;
+
+    document.getElementById("softwareModal").style.display = "flex";
+
+}
+
+function closeModal(){
+
+    document.getElementById("softwareModal").style.display = "none";
+
+}
+
+window.onclick = function(event){
+
+    let modal = document.getElementById("softwareModal");
+
+    if(event.target === modal){
+
+        modal.style.display = "none";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
