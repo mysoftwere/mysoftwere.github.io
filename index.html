@@ -754,6 +754,11 @@ body.dark .logo span{
 @media (max-width:600px){
     .all-admin-controls .btn{flex:1 1 auto;}
 }
+
+/* Drag & Drop ordering UI */
+#softwareGrid .software-card.drag-enabled{cursor:grab;}
+#softwareGrid .software-card.drag-enabled.dragging{opacity:.45;cursor:grabbing;}
+#softwareGrid .software-card.drag-enabled.drag-over{outline:2px dashed #2563eb;outline-offset:3px;}
 </style>
 
 
@@ -1684,6 +1689,55 @@ function createCustomSoftwareCard(item){
 let adminEditMode = false;
 let adminEditUnlocked = false;
 
+function enableSoftwareDragDrop(){
+    const grid = document.getElementById('softwareGrid');
+    if (!grid) return;
+    const cards = grid.querySelectorAll('.software-card');
+    cards.forEach(card => {
+        card.classList.toggle('drag-enabled', !!adminEditUnlocked);
+        card.draggable = !!adminEditUnlocked;
+    });
+    if (!grid.dataset.dragDropBound) {
+        grid.dataset.dragDropBound = '1';
+        let dragged = null;
+        grid.addEventListener('dragstart', function(e){
+            if (!adminEditUnlocked) return;
+            const card = e.target.closest('.software-card');
+            if (!card) return;
+            dragged = card;
+            card.classList.add('dragging');
+            if (e.dataTransfer) {
+                e.dataTransfer.effectAllowed = 'move';
+                try { e.dataTransfer.setData('text/plain', 'software'); } catch(err) {}
+            }
+        });
+        grid.addEventListener('dragover', function(e){
+            if (!adminEditUnlocked || !dragged) return;
+            const card = e.target.closest('.software-card');
+            if (!card || card === dragged) return;
+            e.preventDefault();
+            grid.querySelectorAll('.software-card').forEach(c=>c.classList.remove('drag-over'));
+            card.classList.add('drag-over');
+            const r = card.getBoundingClientRect();
+            if (e.clientY < r.top + r.height/2) card.before(dragged);
+            else card.after(dragged);
+        });
+        grid.addEventListener('drop', function(e){
+            if (!adminEditUnlocked || !dragged) return;
+            e.preventDefault();
+            grid.querySelectorAll('.software-card').forEach(c=>c.classList.remove('drag-over','dragging'));
+            try { saveAllSoftwareOrder(); } catch(err) { console.error(err); }
+            dragged = null;
+        });
+        grid.addEventListener('dragend', function(){
+            grid.querySelectorAll('.software-card').forEach(c=>c.classList.remove('drag-over','dragging'));
+            if (dragged) { try { saveAllSoftwareOrder(); } catch(err) {} }
+            dragged = null;
+        });
+    }
+}
+
+
 
 
 
@@ -1745,6 +1799,7 @@ function verifyAdminPassword(){
     }
 
     adminEditUnlocked = true;
+    enableSoftwareDragDrop();
     const grid = $("softwareGrid");
     const button = document.querySelector(".admin-edit-mode-btn");
     if (grid){
@@ -1763,6 +1818,7 @@ function toggleAdminEditMode(){
     if (grid.classList.contains("admin-edit-active")){
         adminEditUnlocked = false;
         grid.classList.remove("admin-edit-active");
+        enableSoftwareDragDrop();
         if (button) button.textContent = "✏️ Edit Software";
     } else {
         openAdminPasswordModal();
@@ -1995,6 +2051,7 @@ function addAdminControlsToCustomCards(){
           <button class="btn btn-secondary all-move-btn" type="button">↑</button>
           <button class="btn btn-secondary all-move-btn" type="button">↓</button>
           <button class="btn btn-secondary all-top-btn" type="button">Top</button>
+          <button class="btn btn-secondary all-position-btn" type="button">Position</button>
           <button class="btn btn-danger all-remove-btn" type="button">Remove</button>
         `;
 
@@ -2003,10 +2060,12 @@ function addAdminControlsToCustomCards(){
         buttons[1].onclick = () => moveCustomSoftware(id, "up", true);
         buttons[2].onclick = () => moveCustomSoftware(id, "down", true);
         buttons[3].onclick = () => moveCustomToTop(id, true);
-        buttons[4].onclick = () => removeCustomSoftware(id, true);
+        buttons[4].onclick = () => setSoftwarePosition(id, true);
+        buttons[5].onclick = () => removeCustomSoftware(id, true);
 
         card.querySelector(".card-body").appendChild(controls);
     });
+    enableSoftwareDragDrop();
 }
 
 function allSoftwarePasswordOK(){
@@ -2107,6 +2166,7 @@ function initAllSoftwareAdmin(){
           <button class="btn btn-secondary all-move-btn" type="button">↑</button>
           <button class="btn btn-secondary all-move-btn" type="button">↓</button>
           <button class="btn btn-secondary all-top-btn" type="button">Top</button>
+          <button class="btn btn-secondary all-position-btn" type="button">Position</button>
           <button class="btn btn-danger all-remove-btn" type="button">Remove</button>
         `;
 
@@ -2115,12 +2175,14 @@ function initAllSoftwareAdmin(){
         buttons[1].onclick = () => moveAllSoftware(id, "up");
         buttons[2].onclick = () => moveAllSoftware(id, "down");
         buttons[3].onclick = () => moveAllSoftware(id, "top");
-        buttons[4].onclick = () => removeAllSoftware(id);
+        buttons[4].onclick = () => setSoftwarePosition(id, false);
+        buttons[5].onclick = () => removeAllSoftware(id);
 
         card.querySelector(".card-body").appendChild(controls);
     });
 
     applyAllSoftwareOrder();
+    enableSoftwareDragDrop();
 }
 
 function editAllSoftware(id){
@@ -2181,6 +2243,54 @@ function editAllSoftware(id){
         description: description.trim()
     };
     localStorage.setItem("mysoftwere_software_edits", JSON.stringify(all));
+}
+
+function setSoftwarePosition(id, isCustom=false){
+    if (!allSoftwarePasswordOK()) return;
+
+    const grid = $("softwareGrid");
+    if (!grid) return;
+
+    const cards = getAllSoftwareCards();
+    const card = cards.find(c =>
+        String(c.dataset.adminId || c.dataset.customId || "") === String(id)
+    );
+    if (!card) return;
+
+    const current = cards.indexOf(card) + 1;
+    const answer = prompt(
+        "কোন নম্বর পজিশনে রাখতে চান?\n\nবর্তমান পজিশন: " + current + "\nউদাহরণ: 2 দিলে ২ নম্বরে যাবে।",
+        String(current)
+    );
+    if (answer === null) return;
+
+    const position = parseInt(String(answer).trim(), 10);
+    if (!Number.isInteger(position) || position < 1 || position > cards.length){
+        alert("❌ 1 থেকে " + cards.length + " এর মধ্যে একটি নম্বর দিন।");
+        return;
+    }
+
+    const targetIndex = position - 1;
+    const freshCards = getAllSoftwareCards();
+    const currentIndex = freshCards.indexOf(card);
+    if (currentIndex === targetIndex) {
+        alert("ℹ️ Softwareটি ইতিমধ্যে " + position + " নম্বরে আছে।");
+        return;
+    }
+
+    if (targetIndex === 0){
+        grid.insertBefore(card, freshCards[0]);
+    } else {
+        const targetCard = freshCards[targetIndex];
+        if (currentIndex < targetIndex){
+            grid.insertBefore(card, targetCard.nextSibling);
+        } else {
+            grid.insertBefore(card, targetCard);
+        }
+    }
+
+    saveAllSoftwareOrder();
+    alert("✅ " + position + " নম্বর পজিশনে রাখা হয়েছে।");
 }
 
 function moveAllSoftware(id, direction){
@@ -2292,6 +2402,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
     loadCustomSoftware();
     initAllSoftwareAdmin();
+    enableSoftwareDragDrop();
 });
 
 window.toggleAdminEditMode = toggleAdminEditMode;
