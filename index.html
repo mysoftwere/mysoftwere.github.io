@@ -570,6 +570,277 @@ body.dark .logo span{
 #addSoftwareModal .modal-content { position:relative; z-index:10001; }
 </style>
 
+
+<style id="custom-software-card-fix">
+.custom-software-card .custom-logo{
+    width:64px !important;
+    height:64px !important;
+    min-width:64px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:14px;
+    overflow:hidden;
+}
+.custom-software-card .custom-logo img{
+    width:56px;
+    height:56px;
+    object-fit:contain;
+    border-radius:12px;
+    background:#fff;
+    padding:5px;
+}
+.custom-software-card .fallback-logo{
+    font-size:34px;
+}
+.custom-remove-btn{
+    border:0;
+    cursor:pointer;
+    background:#dc3545 !important;
+    color:#fff !important;
+}
+.custom-remove-btn:hover{
+    opacity:.9;
+}
+</style>
+
+
+<style id="professional-custom-card">
+.custom-software-card{
+    position:relative;
+}
+.custom-software-card .software-info p.custom-card-desc{
+    margin:6px 0 0 !important;
+    opacity:.72;
+    font-size:13px;
+}
+.custom-software-card .card-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+}
+.custom-software-card .btn{
+    white-space:nowrap;
+}
+.custom-software-card .custom-remove-btn{
+    background:#e74c3c !important;
+}
+</style>
+
+
+<style id="final-custom-card-style">
+.custom-software-card{
+  position:relative;
+  overflow:hidden;
+}
+.custom-software-card .custom-logo{
+  width:64px !important;
+  height:64px !important;
+  min-width:64px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:14px !important;
+  overflow:hidden !important;
+}
+.custom-software-card .custom-logo img{
+  width:56px !important;
+  height:56px !important;
+  object-fit:contain !important;
+  border-radius:12px !important;
+  background:#fff !important;
+  padding:5px !important;
+}
+.custom-software-card .custom-logo span{
+  font-size:34px;
+}
+.custom-software-card .custom-card-desc{
+  margin:5px 0 0 !important;
+  font-size:13px !important;
+  opacity:.7;
+}
+.custom-software-card .card-buttons{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:7px !important;
+}
+.custom-software-card .custom-remove-btn{
+  border:0 !important;
+  cursor:pointer !important;
+  background:#dc3545 !important;
+  color:#fff !important;
+}
+</style>
+
+
+<style id="same-card-design">
+.custom-software-card .custom-card-top{
+    height:150px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    background:#eff6ff !important;
+}
+.custom-software-card .custom-site-logo{
+    width:82px !important;
+    height:82px !important;
+    object-fit:contain !important;
+    background:#fff !important;
+    border-radius:18px !important;
+    padding:10px !important;
+    box-shadow:0 4px 14px rgba(0,0,0,.08);
+}
+.custom-software-card .custom-fallback-icon{
+    font-size:65px;
+}
+.custom-software-card .custom-card-buttons{
+    align-items:stretch !important;
+}
+.custom-software-card .custom-remove-btn{
+    border:0 !important;
+    background:#dc3545 !important;
+    color:#fff !important;
+}
+@media (max-width:600px){
+    .custom-software-card .custom-card-buttons{
+        flex-wrap:wrap !important;
+    }
+    .custom-software-card .custom-card-buttons .btn{
+        min-width:0;
+    }
+}
+</style>
+
+<style id="remove-final-fix">
+.custom-software-card .custom-remove-btn{cursor:pointer!important;border:0!important;background:#dc3545!important;color:#fff!important}
+</style>
+
+
+
+
+<style id="all-software-admin-style">
+/* Per-card admin buttons: hidden until Edit Software is activated */
+#softwareGrid .all-admin-controls{
+    display:none !important;
+}
+#softwareGrid.admin-edit-active .all-admin-controls{
+    display:flex !important;
+    flex-wrap:wrap !important;
+}
+
+.all-admin-controls{
+    margin-top:10px !important;
+    display:flex !important;
+    flex-wrap:wrap !important;
+    gap:6px !important;
+}
+.all-admin-controls .btn{
+    cursor:pointer !important;
+    min-width:58px;
+    padding:8px 10px !important;
+}
+.all-admin-controls .all-remove-btn{
+    background:#dc3545 !important;
+    color:#fff !important;
+    border:0 !important;
+}
+.all-admin-controls .all-edit-btn,
+.all-admin-controls .all-move-btn,
+.all-admin-controls .all-top-btn{
+    background:#fff !important;
+    color:#334155 !important;
+    border:1px solid #d1d5db !important;
+}
+@media (max-width:600px){
+    .all-admin-controls .btn{flex:1 1 auto;}
+}
+</style>
+
+
+
+
+
+
+
+
+<style id="professional-manager-style">
+.admin-edit-section{
+  margin-top:24px;
+  text-align:center;
+}
+.admin-edit-section p{
+  margin:6px 0 14px;
+  color:#64748b;
+}
+.admin-edit-mode-btn{
+  border:0;
+  border-radius:10px;
+  padding:11px 20px;
+  background:#111827;
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+.software-manager-modal{
+  width:min(720px, calc(100% - 32px));
+  max-height:80vh;
+  overflow:auto;
+}
+.manager-subtitle{
+  color:#64748b;
+  margin-top:-6px;
+}
+.software-manager-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:18px;
+}
+.software-manager-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:12px 14px;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  background:#fff;
+}
+.software-manager-name{
+  font-weight:700;
+  color:#1f2937;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.software-manager-actions{
+  display:flex;
+  gap:7px;
+  flex-shrink:0;
+}
+.software-manager-actions button{
+  border:1px solid #d1d5db;
+  background:#fff;
+  color:#334155;
+  border-radius:8px;
+  padding:7px 11px;
+  font-weight:600;
+  cursor:pointer;
+}
+.software-manager-actions .manager-remove{
+  color:#fff;
+  background:#dc3545;
+  border-color:#dc3545;
+}
+@media(max-width:600px){
+  .software-manager-row{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
+</style>
+
 </head>
 
 <body>
@@ -880,7 +1151,7 @@ body.dark .logo span{
                 <p>Open GooIndex for its online indexing-related service.</p>
                 <div class="card-meta"><span>Online Service</span><span>External</span></div>
                 <div class="card-buttons">
-                    <a class="btn btn-primary" href="https://gooindex.com/" target="_blank" rel="noopener">Open Site</a>
+                    <a class="btn btn-primary" href="https://gooindex.com/" target="_blank" rel="noopener">Open Tool</a>
                     <button class="btn btn-secondary" onclick="showDetails('GooIndex','Online indexing-related service.','Utility','https://gooindex.com/')">Details</button>
                 </div>
             </div>
@@ -894,7 +1165,7 @@ body.dark .logo span{
                 <p>Explore movies, TV shows, ratings, cast and entertainment information.</p>
                 <div class="card-meta"><span>Website</span><span>External</span></div>
                 <div class="card-buttons">
-                    <a class="btn btn-primary" href="https://www.imdb.com/" target="_blank" rel="noopener">Open Site</a>
+                    <a class="btn btn-primary" href="https://www.imdb.com/" target="_blank" rel="noopener">Open Tool</a>
                     <button class="btn btn-secondary" onclick="showDetails('IMDb','Internet Movie Database for movies and TV information.','Entertainment','https://www.imdb.com/')">Details</button>
                 </div>
             </div>
@@ -908,7 +1179,7 @@ body.dark .logo span{
                 <p>Visit ESPN India for sports news, scores and related coverage.</p>
                 <div class="card-meta"><span>Website</span><span>External</span></div>
                 <div class="card-buttons">
-                    <a class="btn btn-primary" href="https://www.espn.in/" target="_blank" rel="noopener">Open Site</a>
+                    <a class="btn btn-primary" href="https://www.espn.in/" target="_blank" rel="noopener">Open Tool</a>
                     <button class="btn btn-secondary" onclick="showDetails('ESPN India','Sports website for news, scores and coverage.','Sports','https://www.espn.in/')">Details</button>
                 </div>
             </div>
@@ -922,7 +1193,7 @@ body.dark .logo span{
                 <p>Open Mailmeteor for email and mail-merge related tools.</p>
                 <div class="card-meta"><span>Online Tool</span><span>External</span></div>
                 <div class="card-buttons">
-                    <a class="btn btn-primary" href="https://mailmeteor.com/" target="_blank" rel="noopener">Open Site</a>
+                    <a class="btn btn-primary" href="https://mailmeteor.com/" target="_blank" rel="noopener">Open Tool</a>
                     <button class="btn btn-secondary" onclick="showDetails('Mailmeteor','Online email and mail-merge service.','Email Tool','https://mailmeteor.com/')">Details</button>
                 </div>
             </div>
@@ -964,7 +1235,7 @@ body.dark .logo span{
                 <p>Open the WPCNT website.</p>
                 <div class="card-meta"><span>Website</span><span>External</span></div>
                 <div class="card-buttons">
-                    <a class="btn btn-primary" href="https://www.wpcnt.com/" target="_blank" rel="noopener">Open Site</a>
+                    <a class="btn btn-primary" href="https://www.wpcnt.com/" target="_blank" rel="noopener">Open Tool</a>
                     <button class="btn btn-secondary" onclick="showDetails('WPCNT','External website shortcut.','Website','https://www.wpcnt.com/')">Details</button>
                 </div>
             </div>
@@ -988,12 +1259,20 @@ body.dark .logo span{
 
 
     <!-- Add Software Section -->
-    <section class="add-software-box" id="addSoftware">
+    
+<section class="add-software-box" id="addSoftware">
         <h2>➕ Add Your Own Software / Website</h2>
         <p>নাম, লিংক ও category দিন। Add চাপলে admin password চাইবে।</p>
         <button class="add-software-btn" onclick="openAddSoftware()">+ Add Software</button>
         <div id="addMessage" class="add-message"></div>
     </section>
+
+<section class="add-software-box admin-edit-section" id="adminEditSection">
+  <h2>🛠️ Manage Software</h2>
+  <p>Edit or remove software from one place. Admin password required.</p>
+  <button type="button" class="admin-edit-mode-btn" onclick="openAdminPasswordModal()">✏️ Edit Software</button>
+</section>
+
 
     <div class="no-result" id="noResult">
         No software found. Try another search.
@@ -1100,6 +1379,16 @@ body.dark .logo span{
     </div>
 
 <!-- Details Modal -->
+
+<div class="modal" id="softwareManagerModal">
+  <div class="modal-content software-manager-modal">
+    <button class="modal-close" type="button" onclick="closeSoftwareManager()">×</button>
+    <h2>🛠️ Manage Software</h2>
+    <p class="manager-subtitle">Choose a software to edit or remove.</p>
+    <div id="softwareManagerList" class="software-manager-list"></div>
+  </div>
+</div>
+
 <div class="modal" id="detailsModal">
     <div class="modal-content">
         <span class="modal-close" onclick="closeModal()">×</span>
@@ -1119,6 +1408,21 @@ body.dark .logo span{
             Open Tool
         </a>
     </div>
+</div>
+
+
+<!-- ADMIN PASSWORD MODAL -->
+<div id="adminPasswordModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.65);align-items:center;justify-content:center;padding:20px;">
+  <div style="width:min(380px,100%);background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.35);text-align:center;">
+    <h3 style="margin:0 0 8px;color:#111827;">🔐 Admin Password</h3>
+    <p style="margin:0 0 16px;color:#64748b;">Edit options খুলতে password দিন</p>
+    <input id="adminPasswordInput" type="password" placeholder="Password" autocomplete="off" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font-size:16px;outline:none;">
+    <div style="display:flex;gap:10px;margin-top:14px;">
+      <button type="button" onclick="closeAdminPasswordModal()" style="flex:1;padding:11px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;cursor:pointer;">Cancel</button>
+      <button type="button" onclick="verifyAdminPassword()" style="flex:1;padding:11px;border:0;border-radius:10px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer;">Unlock</button>
+    </div>
+    <div id="adminPasswordError" style="color:#dc2626;margin-top:10px;min-height:20px;font-size:14px;"></div>
+  </div>
 </div>
 
 
@@ -1297,6 +1601,14 @@ function addNewSoftware(){
         list = [];
     }
 
+    let removedIds = [];
+    try {
+        removedIds = JSON.parse(localStorage.getItem("mysoftwere_removed_tools") || "[]");
+    } catch(e) { removedIds = []; }
+    if (!Array.isArray(removedIds)) removedIds = [];
+    removedIds = removedIds.filter(x => String(x) !== String(item.id));
+    localStorage.setItem("mysoftwere_removed_tools", JSON.stringify(removedIds));
+
     list.push(item);
     localStorage.setItem("mysoftwere_custom_tools", JSON.stringify(list));
 
@@ -1317,38 +1629,342 @@ function addNewSoftware(){
 function createCustomSoftwareCard(item){
     const grid = $("softwareGrid");
     if (!grid) return;
-
-    // Prevent duplicate rendering if load + manual add overlap.
     if (grid.querySelector('[data-custom-id="' + String(item.id) + '"]')) return;
 
     const card = document.createElement("article");
     card.className = "software-card custom-software-card";
     card.dataset.customId = String(item.id);
     card.dataset.category = item.category;
-    card.dataset.name = (item.name + " " + item.url).toLowerCase();
+    card.dataset.name = String(item.name).toLowerCase();
 
-    let icon = "🌐", badge = "Utility";
-    if (item.category === "html"){ icon = "🌐"; badge = "HTML Tool"; }
-    if (item.category === "pdf"){ icon = "📄"; badge = "PDF Tool"; }
+    let host = "";
+    try { host = new URL(item.url).hostname.replace(/^www\./, ""); } catch(e) {}
+
+    const favicon = "https://www.google.com/s2/favicons?domain=" +
+        encodeURIComponent(host) + "&sz=128";
+
+    let badge = "Website";
+    let openText = "Open Site";
+    if (item.category === "pdf") { badge = "PDF Tool"; openText = "Open Tool"; }
+    else if (item.category === "html") { badge = "HTML Tool"; openText = "Open Tool"; }
+    else { badge = "Website"; }
 
     const title = escapeHtml(item.name);
-    const link = escapeHtml(item.url);
+    const url = escapeHtml(item.url);
     const jsName = escapeJs(item.name);
     const jsUrl = escapeJs(item.url);
+    const description = "Official " + escapeHtml(item.name) + " website.";
 
     card.innerHTML = `
-      <div class="software-icon">${icon}</div>
-      <div class="software-info">
-        <span class="software-category">${badge}</span>
-        <h3>${title}</h3>
-        <p>${link}</p>
+      <div class="card-top custom-card-top">
+        <img class="custom-site-logo" src="${favicon}" alt=""
+             onerror="this.style.display='none';this.parentElement.querySelector('.custom-fallback-icon').style.display='block';">
+        <span class="custom-fallback-icon" style="display:none;">🌐</span>
       </div>
-      <div class="card-buttons">
-        <a class="btn btn-primary" href="${link}" target="_blank" rel="noopener noreferrer">Open</a>
-        <button class="btn btn-secondary" type="button"
-          onclick="showDetails('${jsName}','Custom software / website added by the administrator.','${badge}','${jsUrl}')">Details</button>
+      <div class="card-body">
+        <span class="badge">${badge}</span>
+        <h3>${title}</h3>
+        <p>${description}</p>
+        <div class="card-meta">
+          <span>Online Service</span>
+          <span>External</span>
+        </div>
+        <div class="card-buttons custom-card-buttons">
+          <a class="btn btn-primary" href="${url}" target="_blank" rel="noopener noreferrer">${openText}</a>
+          <button class="btn btn-secondary" type="button"
+            onclick="showDetails('${jsName}','${escapeJs(description)}','${escapeJs(badge)}','${jsUrl}')">Details</button>
+        </div>
       </div>`;
     grid.appendChild(card);
+    if (adminEditUnlocked) {
+        try { addAdminControlsToCustomCards(); } catch(e) {}
+    }
+}
+
+let adminEditMode = false;
+let adminEditUnlocked = false;
+
+
+
+
+
+
+
+
+
+function adminPasswordOK(){
+    const password = prompt("Admin password দিন:");
+    if (password === null) return false;
+    if (password !== ADD_SOFTWARE_PASSWORD){
+        alert("❌ Password ভুল!");
+        return false;
+    }
+    return true;
+}
+
+function getCustomList(){
+    let list = [];
+    try { list = JSON.parse(localStorage.getItem("mysoftwere_custom_tools") || "[]"); }
+    catch(e) { list = []; }
+    return Array.isArray(list) ? list : [];
+}
+
+function saveCustomList(list){
+    localStorage.setItem("mysoftwere_custom_tools", JSON.stringify(list));
+}
+
+
+function openAdminPasswordModal(){
+    const modal = $("adminPasswordModal");
+    const input = $("adminPasswordInput");
+    const error = $("adminPasswordError");
+    if (!modal) return false;
+    modal.style.display = "flex";
+    if (input){
+        input.value = "";
+        setTimeout(() => input.focus(), 50);
+        input.onkeydown = function(e){ if(e.key === "Enter") verifyAdminPassword(); };
+    }
+    if (error) error.textContent = "";
+    return false;
+}
+
+function closeAdminPasswordModal(){
+    const modal = $("adminPasswordModal");
+    if (modal) modal.style.display = "none";
+}
+
+function verifyAdminPassword(){
+    const input = $("adminPasswordInput");
+    const error = $("adminPasswordError");
+    const password = input ? input.value : "";
+    if (password !== ADD_SOFTWARE_PASSWORD){
+        if (error) error.textContent = "❌ Password ভুল!";
+        if (input) input.focus();
+        return;
+    }
+
+    adminEditUnlocked = true;
+    const grid = $("softwareGrid");
+    const button = document.querySelector(".admin-edit-mode-btn");
+    if (grid){
+        try { initAllSoftwareAdmin(); } catch(e) {}
+        try { addAdminControlsToCustomCards(); } catch(e) {}
+        grid.classList.add("admin-edit-active");
+    }
+    if (button) button.textContent = "✖️ Hide Edit Options";
+    closeAdminPasswordModal();
+}
+
+function toggleAdminEditMode(){
+    const grid = $("softwareGrid");
+    const button = document.querySelector(".admin-edit-mode-btn");
+    if (!grid) return;
+    if (grid.classList.contains("admin-edit-active")){
+        adminEditUnlocked = false;
+        grid.classList.remove("admin-edit-active");
+        if (button) button.textContent = "✏️ Edit Software";
+    } else {
+        openAdminPasswordModal();
+    }
+}
+
+function openSoftwareManager(){
+    const modal = $("softwareManagerModal");
+    const listBox = $("softwareManagerList");
+    if (!modal || !listBox) return;
+
+    listBox.innerHTML = "";
+    const custom = getCustomList();
+
+    // All software cards on the page, including built-in cards.
+    document.querySelectorAll("#softwareGrid .software-card").forEach((card, index) => {
+        const customId = card.dataset.customId || "";
+        const nameEl = card.querySelector("h3");
+        const name = nameEl ? nameEl.textContent.trim() : ("Software " + (index + 1));
+
+        const row = document.createElement("div");
+        row.className = "software-manager-row";
+
+        const title = document.createElement("div");
+        title.className = "software-manager-name";
+        title.textContent = name;
+
+        const actions = document.createElement("div");
+        actions.className = "software-manager-actions";
+
+        const edit = document.createElement("button");
+        edit.type = "button";
+        edit.textContent = "✏️ Edit";
+        edit.onclick = () => {
+            closeSoftwareManager();
+            if (customId) {
+                editCustomSoftware(customId);
+            } else {
+                editBuiltInSoftware(card);
+            }
+        };
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "manager-remove";
+        remove.textContent = "🗑️ Remove";
+        remove.onclick = () => {
+            if (customId) {
+                removeCustomSoftware(customId);
+            } else {
+                if (confirm("এই software remove করতে চান?")) card.remove();
+            }
+            openSoftwareManager();
+        };
+
+        actions.appendChild(edit);
+        actions.appendChild(remove);
+        row.appendChild(title);
+        row.appendChild(actions);
+        listBox.appendChild(row);
+    });
+
+    modal.style.display = "flex";
+}
+
+function closeSoftwareManager(){
+    const modal = $("softwareManagerModal");
+    if (modal) modal.style.display = "none";
+}
+
+function editBuiltInSoftware(card){
+    const heading = card.querySelector("h3");
+    const link = card.querySelector("a[href]");
+    const paragraph = card.querySelector("p");
+
+    if (!heading) return;
+
+    const name = prompt("Software name:", heading.textContent.trim());
+    if (name === null) return;
+
+    let url = link ? prompt("Website link:", link.getAttribute("href") || "") : null;
+    if (link && url === null) return;
+
+    const desc = paragraph ? prompt("Description:", paragraph.textContent.trim()) : "";
+
+    if (link && url && url.trim()){
+        try {
+            const u = new URL(url.trim());
+            if (!["http:","https:"].includes(u.protocol)) throw new Error();
+            link.href = u.href;
+        } catch(e) {
+            alert("❌ সঠিক website link দিন।");
+            return;
+        }
+    }
+
+    heading.textContent = name.trim() || heading.textContent.trim();
+    if (paragraph && desc !== null) paragraph.textContent = desc;
+
+    alert("✅ Software updated.");
+}
+
+function editCustomSoftware(id, alreadyVerified=false){
+    if (!alreadyVerified && !adminPasswordOK()) return;
+
+    const list = getCustomList();
+    const item = list.find(x => String(x.id) === String(id));
+    if (!item) return;
+
+    const name = prompt("Software/Website name:", item.name);
+    if (name === null) return;
+
+    const url = prompt("Website link:", item.url);
+    if (url === null) return;
+
+    let parsed;
+    try {
+        parsed = new URL(url.trim());
+        if (!["http:","https:"].includes(parsed.protocol)) throw new Error();
+    } catch(e) {
+        alert("❌ সঠিক website link দিন।");
+        return;
+    }
+
+    const category = prompt("Category (utility / html / pdf):", item.category || "utility");
+    if (category === null) return;
+
+    item.name = name.trim() || item.name;
+    item.url = parsed.href;
+    item.category = category.trim().toLowerCase() || "utility";
+
+    saveCustomList(list);
+
+    const oldCard = document.querySelector('[data-custom-id="' + String(id) + '"]');
+    if (oldCard) oldCard.remove();
+    createCustomSoftwareCard(item);
+}
+
+function moveCustomSoftware(id, direction, alreadyVerified=false){
+    if (!alreadyVerified && !adminPasswordOK()) return;
+
+    const list = getCustomList();
+    const index = list.findIndex(x => String(x.id) === String(id));
+    if (index < 0) return;
+
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= list.length){
+        alert(direction === "up" ? "এটা ইতিমধ্যে সবচেয়ে উপরে আছে।" : "এটা ইতিমধ্যে সবচেয়ে নিচে আছে।");
+        return;
+    }
+
+    const temp = list[index];
+    list[index] = list[newIndex];
+    list[newIndex] = temp;
+    saveCustomList(list);
+
+    // Rebuild only custom cards, preserving the site's original cards.
+    document.querySelectorAll(".custom-software-card").forEach(el => el.remove());
+    list.forEach(createCustomSoftwareCard);
+}
+
+function moveCustomToTop(id, alreadyVerified=false){
+    if (!alreadyVerified && !adminPasswordOK()) return;
+
+    const list = getCustomList();
+    const index = list.findIndex(x => String(x.id) === String(id));
+    if (index < 0) return;
+
+    const item = list.splice(index, 1)[0];
+    list.unshift(item);
+    saveCustomList(list);
+
+    document.querySelectorAll(".custom-software-card").forEach(el => el.remove());
+    list.forEach(createCustomSoftwareCard);
+}
+
+function removeCustomSoftware(id, alreadyVerified=false){
+    if (!alreadyVerified && !adminPasswordOK()) return;
+
+    let list = [];
+    let removed = [];
+    try {
+        list = JSON.parse(localStorage.getItem("mysoftwere_custom_tools") || "[]");
+        removed = JSON.parse(localStorage.getItem("mysoftwere_removed_tools") || "[]");
+    } catch(e) { list = []; removed = []; }
+
+    if (!Array.isArray(list)) list = [];
+    if (!Array.isArray(removed)) removed = [];
+
+    list = list.filter(x => String(x.id) !== String(id));
+    if (!removed.includes(String(id))) removed.push(String(id));
+
+    localStorage.setItem("mysoftwere_custom_tools", JSON.stringify(list));
+    localStorage.setItem("mysoftwere_removed_tools", JSON.stringify(removed));
+
+    const card = document.querySelector('[data-custom-id="' + String(id) + '"]');
+    if (card) {
+        card.style.transition = "opacity .2s, transform .2s";
+        card.style.opacity = "0";
+        card.style.transform = "scale(.96)";
+        setTimeout(() => card.remove(), 220);
+    }
 }
 
 function escapeHtml(s){
@@ -1364,6 +1980,285 @@ function escapeJs(s){
     return String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
 }
 
+
+function addAdminControlsToCustomCards(){
+    document.querySelectorAll("#softwareGrid .custom-software-card").forEach(card => {
+        if (card.querySelector(".all-admin-controls")) return;
+
+        const id = String(card.dataset.customId || "");
+        if (!id) return;
+
+        const controls = document.createElement("div");
+        controls.className = "card-buttons all-admin-controls";
+        controls.innerHTML = `
+          <button class="btn btn-secondary all-edit-btn" type="button">Edit</button>
+          <button class="btn btn-secondary all-move-btn" type="button">↑</button>
+          <button class="btn btn-secondary all-move-btn" type="button">↓</button>
+          <button class="btn btn-secondary all-top-btn" type="button">Top</button>
+          <button class="btn btn-danger all-remove-btn" type="button">Remove</button>
+        `;
+
+        const buttons = controls.querySelectorAll("button");
+        buttons[0].onclick = () => editCustomSoftware(id, true);
+        buttons[1].onclick = () => moveCustomSoftware(id, "up", true);
+        buttons[2].onclick = () => moveCustomSoftware(id, "down", true);
+        buttons[3].onclick = () => moveCustomToTop(id, true);
+        buttons[4].onclick = () => removeCustomSoftware(id, true);
+
+        card.querySelector(".card-body").appendChild(controls);
+    });
+}
+
+function allSoftwarePasswordOK(){
+    // After Edit Software is unlocked, card controls work directly.
+    if (adminEditUnlocked) return true;
+
+    const password = prompt("Admin password দিন:");
+    if (password === null) return false;
+    if (password !== ADD_SOFTWARE_PASSWORD){
+        alert("❌ Password ভুল!");
+        return false;
+    }
+    return true;
+}
+
+function getAllSoftwareCards(){
+    const grid = $("softwareGrid");
+    return grid ? Array.from(grid.querySelectorAll(".software-card")) : [];
+}
+
+function saveAllSoftwareOrder(){
+    const order = getAllSoftwareCards().map(card => String(card.dataset.adminId || card.dataset.customId || ""));
+    localStorage.setItem("mysoftwere_all_software_order", JSON.stringify(order));
+}
+
+function applyAllSoftwareOrder(){
+    const grid = $("softwareGrid");
+    if (!grid) return;
+
+    let order = [];
+    try { order = JSON.parse(localStorage.getItem("mysoftwere_all_software_order") || "[]"); }
+    catch(e) { order = []; }
+    if (!Array.isArray(order)) order = [];
+
+    const cards = getAllSoftwareCards();
+    const byId = new Map(cards.map(card => [
+        String(card.dataset.adminId || card.dataset.customId || ""), card
+    ]));
+
+    order.forEach(id => {
+        const card = byId.get(String(id));
+        if (card) grid.appendChild(card);
+    });
+
+    // Cards not yet in the saved order are appended in their normal/source order.
+    getAllSoftwareCards().forEach(card => {
+        const id = String(card.dataset.adminId || card.dataset.customId || "");
+        if (!order.includes(id)) grid.appendChild(card);
+    });
+
+    saveAllSoftwareOrder();
+}
+
+function initAllSoftwareAdmin(){
+    const cards = getAllSoftwareCards();
+    const removed = (() => {
+        try {
+            const x = JSON.parse(localStorage.getItem("mysoftwere_removed_all_software") || "[]");
+            return Array.isArray(x) ? x.map(String) : [];
+        } catch(e) { return []; }
+    })();
+
+    cards.forEach((card, index) => {
+        if (card.classList.contains("custom-software-card")) return;
+
+        const id = "site-" + index;
+        card.dataset.adminId = id;
+
+        if (removed.includes(id)){
+            card.remove();
+            return;
+        }
+
+        // Restore saved edits for this built-in card.
+        let edits = {};
+        try {
+            const all = JSON.parse(localStorage.getItem("mysoftwere_software_edits") || "{}");
+            edits = all[id] || {};
+        } catch(e) {}
+
+        const titleEl = card.querySelector("h3");
+        const badgeEl = card.querySelector(".badge");
+        const descEl = card.querySelector(".card-body > p");
+        const openEl = card.querySelector(".card-buttons a");
+
+        if (edits.name && titleEl) titleEl.textContent = edits.name;
+        if (edits.category && badgeEl) badgeEl.textContent = edits.category;
+        if (edits.description && descEl) descEl.textContent = edits.description;
+        if (edits.url && openEl) openEl.href = edits.url;
+
+        // Do not add duplicate admin controls.
+        if (card.querySelector(".all-admin-controls")) return;
+
+        const controls = document.createElement("div");
+        controls.className = "card-buttons all-admin-controls";
+        controls.innerHTML = `
+          <button class="btn btn-secondary all-edit-btn" type="button">Edit</button>
+          <button class="btn btn-secondary all-move-btn" type="button">↑</button>
+          <button class="btn btn-secondary all-move-btn" type="button">↓</button>
+          <button class="btn btn-secondary all-top-btn" type="button">Top</button>
+          <button class="btn btn-danger all-remove-btn" type="button">Remove</button>
+        `;
+
+        const buttons = controls.querySelectorAll("button");
+        buttons[0].onclick = () => editAllSoftware(id);
+        buttons[1].onclick = () => moveAllSoftware(id, "up");
+        buttons[2].onclick = () => moveAllSoftware(id, "down");
+        buttons[3].onclick = () => moveAllSoftware(id, "top");
+        buttons[4].onclick = () => removeAllSoftware(id);
+
+        card.querySelector(".card-body").appendChild(controls);
+    });
+
+    applyAllSoftwareOrder();
+}
+
+function editAllSoftware(id){
+    if (!allSoftwarePasswordOK()) return;
+
+    const card = document.querySelector('[data-admin-id="' + String(id) + '"]');
+    if (!card) return;
+
+    const titleEl = card.querySelector("h3");
+    const badgeEl = card.querySelector(".badge");
+    const descEl = card.querySelector(".card-body > p");
+    const openEl = card.querySelector(".card-buttons a");
+
+    const name = prompt("Software name:", titleEl ? titleEl.textContent.trim() : "");
+    if (name === null) return;
+
+    const url = prompt("Website / tool link:", openEl ? openEl.href : "");
+    if (url === null) return;
+
+    let parsed;
+    try {
+        parsed = new URL(url.trim());
+        if (!["http:", "https:"].includes(parsed.protocol)) throw new Error();
+    } catch(e) {
+        alert("❌ সঠিক website link দিন।");
+        return;
+    }
+
+    const category = prompt("Category:", badgeEl ? badgeEl.textContent.trim() : "Website");
+    if (category === null) return;
+
+    const description = prompt("Description:", descEl ? descEl.textContent.trim() : "");
+    if (description === null) return;
+
+    if (titleEl) titleEl.textContent = name.trim() || "Software";
+    if (badgeEl) badgeEl.textContent = category.trim() || "Website";
+    if (descEl) descEl.textContent = description.trim();
+    if (openEl) openEl.href = parsed.href;
+
+    // Keep Details button in sync with the edited information.
+    const detailBtn = card.querySelector(".card-buttons button");
+    if (detailBtn && typeof showDetails === "function"){
+        detailBtn.onclick = () => showDetails(
+            name.trim() || "Software",
+            description.trim(),
+            category.trim() || "Website",
+            parsed.href
+        );
+    }
+
+    let all = {};
+    try { all = JSON.parse(localStorage.getItem("mysoftwere_software_edits") || "{}"); }
+    catch(e) { all = {}; }
+    all[id] = {
+        name: name.trim() || "Software",
+        url: parsed.href,
+        category: category.trim() || "Website",
+        description: description.trim()
+    };
+    localStorage.setItem("mysoftwere_software_edits", JSON.stringify(all));
+}
+
+function moveAllSoftware(id, direction){
+    if (!allSoftwarePasswordOK()) return;
+
+    const cards = getAllSoftwareCards();
+    const index = cards.findIndex(card =>
+        String(card.dataset.adminId || card.dataset.customId) === String(id)
+    );
+    if (index < 0) return;
+
+    let target = index;
+    if (direction === "up") target = index - 1;
+    if (direction === "down") target = index + 1;
+    if (direction === "top") target = 0;
+
+    if (target < 0 || target >= cards.length){
+        alert(direction === "up" ? "এটা ইতিমধ্যে সবচেয়ে উপরে আছে।" :
+              direction === "down" ? "এটা ইতিমধ্যে সবচেয়ে নিচে আছে।" : "এটা ইতিমধ্যে উপরে আছে।");
+        return;
+    }
+
+    const grid = $("softwareGrid");
+    if (target === 0){
+        grid.insertBefore(cards[index], cards[0]);
+    } else if (target < index){
+        grid.insertBefore(cards[index], cards[target]);
+    } else {
+        grid.insertBefore(cards[index], cards[target].nextSibling);
+    }
+    saveAllSoftwareOrder();
+}
+
+function removeAllSoftware(id){
+    if (!allSoftwarePasswordOK()) return;
+
+    const card = document.querySelector('[data-admin-id="' + String(id) + '"]');
+    if (!card) return;
+
+    let removed = [];
+    try { removed = JSON.parse(localStorage.getItem("mysoftwere_removed_all_software") || "[]"); }
+    catch(e) { removed = []; }
+    if (!Array.isArray(removed)) removed = [];
+
+    if (!removed.includes(String(id))) removed.push(String(id));
+    localStorage.setItem("mysoftwere_removed_all_software", JSON.stringify(removed));
+
+    card.remove();
+    saveAllSoftwareOrder();
+}
+
+function ensureDefaultRocketIndexer(){
+    let list = [];
+    let removed = [];
+    try {
+        list = JSON.parse(localStorage.getItem("mysoftwere_custom_tools") || "[]");
+        removed = JSON.parse(localStorage.getItem("mysoftwere_removed_tools") || "[]");
+    } catch(e) { list = []; removed = []; }
+
+    if (!Array.isArray(list)) list = [];
+    if (!Array.isArray(removed)) removed = [];
+
+    const rocketRemoved = removed.includes("rocketindexer-default");
+    const exists = list.some(x =>
+        String(x.url || "").replace(/\/+$/,"").toLowerCase() === "https://rocketindexer.com"
+    );
+
+    if (!exists && !rocketRemoved){
+        list.push({
+            id: "rocketindexer-default",
+            name: "Rocket Indexer",
+            url: "https://rocketindexer.com/",
+            category: "utility"
+        });
+        localStorage.setItem("mysoftwere_custom_tools", JSON.stringify(list));
+    }
+}
+
 function loadCustomSoftware(){
     let list = [];
     try {
@@ -1377,6 +2272,7 @@ function loadCustomSoftware(){
 
 /* Wire the button without relying only on inline onclick. */
 document.addEventListener("DOMContentLoaded", function(){
+    ensureDefaultRocketIndexer();
     const addBtn = document.querySelector('#addSoftware button.add-software-btn');
     if (addBtn) addBtn.addEventListener("click", openAddSoftware);
 
@@ -1395,12 +2291,21 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     loadCustomSoftware();
+    initAllSoftwareAdmin();
 });
 
+window.toggleAdminEditMode = toggleAdminEditMode;
+window.openAdminPasswordModal = openAdminPasswordModal;
+window.closeAdminPasswordModal = closeAdminPasswordModal;
+window.verifyAdminPassword = verifyAdminPassword;
 window.openAddSoftware = openAddSoftware;
 window.closeAddSoftware = closeAddSoftware;
 window.addNewSoftware = addNewSoftware;
 window.createCustomSoftwareCard = createCustomSoftwareCard;
+window.removeCustomSoftware = removeCustomSoftware;
+window.editCustomSoftware = editCustomSoftware;
+window.moveCustomSoftware = moveCustomSoftware;
+window.moveCustomToTop = moveCustomToTop;
 </script>
 
 </body>
