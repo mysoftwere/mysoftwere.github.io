@@ -564,6 +564,12 @@ body.dark .logo span{
     }
 }
 </style>
+
+<style id="add-software-fix">
+#addSoftwareModal.show { display:flex !important; }
+#addSoftwareModal .modal-content { position:relative; z-index:10001; }
+</style>
+
 </head>
 
 <body>
@@ -1217,85 +1223,184 @@ if(localStorage.getItem("theme") === "dark"){
     document.getElementById("themeBtn").textContent = "☀️";
 }
 
-/* Add Software System
-   CHANGE "Freefire645268756625800" BELOW TO YOUR OWN ADMIN PASSWORD. */
+/* Add Software System - robust version
+   Change the password below if you want. */
 const ADD_SOFTWARE_PASSWORD = "Freefire645268756625800";
 
+function $(id){ return document.getElementById(id); }
+
 function openAddSoftware(){
-    document.getElementById("addSoftwareModal").style.display="flex";
-    document.getElementById("addError").textContent="";
+    const modal = $("addSoftwareModal");
+    const error = $("addError");
+    if (!modal) return;
+    modal.style.display = "flex";
+    modal.classList.add("show");
+    if (error) error.textContent = "";
+    const name = $("newSoftwareName");
+    if (name) setTimeout(() => name.focus(), 50);
 }
+
 function closeAddSoftware(){
-    document.getElementById("addSoftwareModal").style.display="none";
+    const modal = $("addSoftwareModal");
+    if (!modal) return;
+    modal.style.display = "none";
+    modal.classList.remove("show");
 }
+
 function addNewSoftware(){
-    const name=document.getElementById("newSoftwareName").value.trim();
-    const url=document.getElementById("newSoftwareUrl").value.trim();
-    const category=document.getElementById("newSoftwareCategory").value;
-    const password=document.getElementById("addPassword").value;
-    const error=document.getElementById("addError");
+    const nameEl = $("newSoftwareName");
+    const urlEl = $("newSoftwareUrl");
+    const catEl = $("newSoftwareCategory");
+    const passEl = $("addPassword");
+    const error = $("addError");
 
-    if(!name||!url||!password){error.textContent="সব তথ্য পূরণ করুন।";return;}
-    if(password!==ADD_SOFTWARE_PASSWORD){error.textContent="❌ Password ভুল!";return;}
+    if (!nameEl || !urlEl || !catEl || !passEl) return;
 
-    try{
-        const u=new URL(url);
-        if(!["http:","https:"].includes(u.protocol)) throw new Error();
-    }catch(e){error.textContent="❌ সঠিক website link দিন।";return;}
+    const name = nameEl.value.trim();
+    const url = urlEl.value.trim();
+    const category = catEl.value;
+    const password = passEl.value;
 
-    const item={id:Date.now(),name,url,category};
-    const list=JSON.parse(localStorage.getItem("mysoftwere_custom_tools")||"[]");
+    if (!name || !url || !password){
+        if (error) error.textContent = "সব তথ্য পূরণ করুন।";
+        return;
+    }
+
+    if (password !== ADD_SOFTWARE_PASSWORD){
+        if (error) error.textContent = "❌ Password ভুল!";
+        passEl.focus();
+        return;
+    }
+
+    let parsed;
+    try {
+        parsed = new URL(url);
+        if (!["http:", "https:"].includes(parsed.protocol)) throw new Error();
+    } catch(e) {
+        if (error) error.textContent = "❌ সঠিক website link দিন। উদাহরণ: https://example.com";
+        urlEl.focus();
+        return;
+    }
+
+    const item = {
+        id: Date.now(),
+        name: name,
+        url: parsed.href,
+        category: category
+    };
+
+    let list = [];
+    try {
+        list = JSON.parse(localStorage.getItem("mysoftwere_custom_tools") || "[]");
+        if (!Array.isArray(list)) list = [];
+    } catch(e) {
+        list = [];
+    }
+
     list.push(item);
-    localStorage.setItem("mysoftwere_custom_tools",JSON.stringify(list));
+    localStorage.setItem("mysoftwere_custom_tools", JSON.stringify(list));
+
     createCustomSoftwareCard(item);
 
-    document.getElementById("newSoftwareName").value="";
-    document.getElementById("newSoftwareUrl").value="";
-    document.getElementById("addPassword").value="";
+    nameEl.value = "";
+    urlEl.value = "";
+    passEl.value = "";
     closeAddSoftware();
 
-    const msg=document.getElementById("addMessage");
-    msg.textContent="✅ "+name+" সফলভাবে যোগ হয়েছে।";
-    setTimeout(()=>msg.textContent="",4000);
+    const msg = $("addMessage");
+    if (msg){
+        msg.textContent = "✅ " + name + " সফলভাবে যোগ হয়েছে।";
+        setTimeout(() => { msg.textContent = ""; }, 4000);
+    }
 }
+
 function createCustomSoftwareCard(item){
-    const grid=document.getElementById("softwareGrid");
-    const card=document.createElement("article");
-    card.className="software-card custom-software-card";
-    card.dataset.category=item.category;
-    card.dataset.name=(item.name+" "+item.url).toLowerCase();
+    const grid = $("softwareGrid");
+    if (!grid) return;
 
-    let icon="🌐", badge="Utility";
-    if(item.category==="html"){icon="🌐";badge="HTML Tool";}
-    if(item.category==="pdf"){icon="📄";badge="PDF Tool";}
+    // Prevent duplicate rendering if load + manual add overlap.
+    if (grid.querySelector('[data-custom-id="' + String(item.id) + '"]')) return;
 
-    const title=escapeHtml(item.name);
-    const link=escapeHtml(item.url);
-    const jsName=escapeJs(item.name);
-    const jsUrl=escapeJs(item.url);
+    const card = document.createElement("article");
+    card.className = "software-card custom-software-card";
+    card.dataset.customId = String(item.id);
+    card.dataset.category = item.category;
+    card.dataset.name = (item.name + " " + item.url).toLowerCase();
 
-    card.innerHTML=`<div class="card-top">${icon}</div>
-    <div class="card-body">
-      <span class="badge">${badge}</span>
-      <h3>${title}</h3>
-      <p>Custom software / website added from the Add Software section.</p>
-      <div class="card-meta"><span>Custom</span><span>Added</span></div>
-      <div class="card-buttons">
-        <a class="btn btn-primary" href="${link}" target="_blank" rel="noopener">Open</a>
-        <button class="btn btn-secondary" onclick="showDetails('${jsName}','Custom software / website added by the administrator.','${badge}','${jsUrl}')">Details</button>
+    let icon = "🌐", badge = "Utility";
+    if (item.category === "html"){ icon = "🌐"; badge = "HTML Tool"; }
+    if (item.category === "pdf"){ icon = "📄"; badge = "PDF Tool"; }
+
+    const title = escapeHtml(item.name);
+    const link = escapeHtml(item.url);
+    const jsName = escapeJs(item.name);
+    const jsUrl = escapeJs(item.url);
+
+    card.innerHTML = `
+      <div class="software-icon">${icon}</div>
+      <div class="software-info">
+        <span class="software-category">${badge}</span>
+        <h3>${title}</h3>
+        <p>${link}</p>
       </div>
-    </div>`;
+      <div class="card-buttons">
+        <a class="btn btn-primary" href="${link}" target="_blank" rel="noopener noreferrer">Open</a>
+        <button class="btn btn-secondary" type="button"
+          onclick="showDetails('${jsName}','Custom software / website added by the administrator.','${badge}','${jsUrl}')">Details</button>
+      </div>`;
     grid.appendChild(card);
 }
-function escapeHtml(s){
-    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-}
-function escapeJs(s){return s.replace(/\\/g,"\\\\").replace(/'/g,"\\'");}
-function loadCustomSoftware(){
-    JSON.parse(localStorage.getItem("mysoftwere_custom_tools")||"[]").forEach(createCustomSoftwareCard);
-}
-loadCustomSoftware();
 
+function escapeHtml(s){
+    return String(s)
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
+}
+
+function escapeJs(s){
+    return String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
+}
+
+function loadCustomSoftware(){
+    let list = [];
+    try {
+        list = JSON.parse(localStorage.getItem("mysoftwere_custom_tools") || "[]");
+        if (!Array.isArray(list)) list = [];
+    } catch(e) {
+        list = [];
+    }
+    list.forEach(createCustomSoftwareCard);
+}
+
+/* Wire the button without relying only on inline onclick. */
+document.addEventListener("DOMContentLoaded", function(){
+    const addBtn = document.querySelector('#addSoftware button.add-software-btn');
+    if (addBtn) addBtn.addEventListener("click", openAddSoftware);
+
+    const modal = $("addSoftwareModal");
+    if (modal){
+        modal.addEventListener("click", function(e){
+            if (e.target === modal) closeAddSoftware();
+        });
+    }
+
+    const password = $("addPassword");
+    if (password){
+        password.addEventListener("keydown", function(e){
+            if (e.key === "Enter") addNewSoftware();
+        });
+    }
+
+    loadCustomSoftware();
+});
+
+window.openAddSoftware = openAddSoftware;
+window.closeAddSoftware = closeAddSoftware;
+window.addNewSoftware = addNewSoftware;
+window.createCustomSoftwareCard = createCustomSoftwareCard;
 </script>
 
 </body>
