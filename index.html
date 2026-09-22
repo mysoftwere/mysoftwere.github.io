@@ -1056,6 +1056,43 @@ body.dark .logo span{
 </footer>
 
 
+    <!-- Add Software Modal -->
+    <div class="modal" id="addSoftwareModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeAddSoftware()">×</span>
+            <h2>➕ Add Software / Website</h2>
+            <p>নাম, website link ও category দিন। তারপর admin password দিয়ে Add করুন।</p>
+
+            <div class="form-group">
+                <label for="newSoftwareName">Software / Website Name</label>
+                <input type="text" id="newSoftwareName" placeholder="যেমন: My Website">
+            </div>
+
+            <div class="form-group">
+                <label for="newSoftwareUrl">Website Link</label>
+                <input type="url" id="newSoftwareUrl" placeholder="https://example.com">
+            </div>
+
+            <div class="form-group">
+                <label for="newSoftwareCategory">Category</label>
+                <select id="newSoftwareCategory">
+                    <option value="utility">Utility</option>
+                    <option value="html">HTML Tool</option>
+                    <option value="pdf">PDF Tool</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="addPassword">Admin Password</label>
+                <input type="password" id="addPassword" placeholder="Admin password">
+            </div>
+
+            <div id="addError" class="add-message" style="color:#dc2626;"></div>
+
+            <button class="add-software-btn" onclick="addNewSoftware()">Add Software</button>
+        </div>
+    </div>
+
 <!-- Details Modal -->
 <div class="modal" id="detailsModal">
     <div class="modal-content">
