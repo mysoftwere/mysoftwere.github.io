@@ -1463,7 +1463,9 @@ body.dark .logo span{
 
 <script>
 const searchInput = document.getElementById("searchInput");
-const cards = document.querySelectorAll(".software-card");
+function getSoftwareCards(){
+    return document.querySelectorAll("#softwareGrid .software-card");
+}
 const noResult = document.getElementById("noResult");
 
 searchInput.addEventListener("keyup", function(){
@@ -1474,7 +1476,7 @@ function searchSoftware(){
     const keyword = searchInput.value.toLowerCase().trim();
     let found = 0;
 
-    cards.forEach(card => {
+    getSoftwareCards().forEach(card => {
         const name = card.getAttribute("data-name").toLowerCase();
 
         if(name.includes(keyword)){
@@ -1498,7 +1500,7 @@ function filterCategory(category, button){
 
     let found = 0;
 
-    cards.forEach(card => {
+    getSoftwareCards().forEach(card => {
 
         const cardCategory = card.getAttribute("data-category");
 
@@ -1564,39 +1566,7 @@ if(localStorage.getItem("theme") === "dark"){
 
 /* Add Software System - robust version
    Change the password below if you want. */
-const API_URL = "https://script.google.com/macros/s/AKfycbxeD6VqiZPxx4q0_y7WzxBDQta2z9Vd7w3h0nnSSBq59rTV308BfTO2kv-PUi6g9Adx/exec";
-const ADMIN_PASSWORD = "Freefire645268756625800";
-
-async function apiPost(payload){
-    await fetch(API_URL,{
-        method:"POST",
-        mode:"no-cors",
-        headers:{"Content-Type":"text/plain;charset=utf-8"},
-        body:JSON.stringify(payload)
-    });
-    await new Promise(r=>setTimeout(r,900));
-}
-
-function apiGet(){
-    return new Promise(resolve=>{
-        const cb="mySoftwereCB_"+Date.now();
-        window[cb]=function(data){
-            try{delete window[cb];}catch(e){}
-            const s=document.getElementById(cb);
-            if(s)s.remove();
-            resolve(Array.isArray(data)?data:[]);
-        };
-        const s=document.createElement("script");
-        s.id=cb;
-        s.src=API_URL+"?callback="+encodeURIComponent(cb);
-        s.onerror=function(){
-            try{delete window[cb];}catch(e){}
-            s.remove();
-            resolve([]);
-        };
-        document.body.appendChild(s);
-    });
-}
+const ADD_SOFTWARE_PASSWORD = "Freefire645268756625800";
 
 function $(id){ return document.getElementById(id); }
 
@@ -1618,54 +1588,78 @@ function closeAddSoftware(){
     modal.classList.remove("show");
 }
 
-async function addNewSoftware(){
-    const nameEl=$("newSoftwareName"), urlEl=$("newSoftwareUrl"),
-          catEl=$("newSoftwareCategory"), passEl=$("addPassword"),
-          error=$("addError");
-    if(!nameEl||!urlEl||!catEl||!passEl)return;
+function addNewSoftware(){
+    const nameEl = $("newSoftwareName");
+    const urlEl = $("newSoftwareUrl");
+    const catEl = $("newSoftwareCategory");
+    const passEl = $("addPassword");
+    const error = $("addError");
 
-    const name=nameEl.value.trim(), url=urlEl.value.trim(),
-          category=catEl.value, password=passEl.value;
+    if (!nameEl || !urlEl || !catEl || !passEl) return;
 
-    if(!name||!url||!password){
-        if(error)error.textContent="সব তথ্য পূরণ করুন।";
+    const name = nameEl.value.trim();
+    const url = urlEl.value.trim();
+    const category = catEl.value;
+    const password = passEl.value;
+
+    if (!name || !url || !password){
+        if (error) error.textContent = "সব তথ্য পূরণ করুন।";
+        return;
+    }
+
+    if (password !== ADD_SOFTWARE_PASSWORD){
+        if (error) error.textContent = "❌ Password ভুল!";
+        passEl.focus();
         return;
     }
 
     let parsed;
-    try{
-        parsed=new URL(url);
-        if(!["http:","https:"].includes(parsed.protocol))throw new Error();
-    }catch(e){
-        if(error)error.textContent="❌ সঠিক website link দিন।";
+    try {
+        parsed = new URL(url);
+        if (!["http:", "https:"].includes(parsed.protocol)) throw new Error();
+    } catch(e) {
+        if (error) error.textContent = "❌ সঠিক website link দিন। উদাহরণ: https://example.com";
+        urlEl.focus();
         return;
     }
 
-    if(error)error.textContent="⏳ Saving...";
+    const item = {
+        id: Date.now(),
+        name: name,
+        url: parsed.href,
+        category: category
+    };
 
-    await apiPost({
-        action:"add",
-        password:password,
-        item:{
-            id:"sw-"+Date.now(),
-            name:name,
-            url:parsed.href,
-            category:category,
-            description:"Official "+name+" website."
-        }
-    });
+    let list = [];
+    try {
+        list = JSON.parse(localStorage.getItem("mysoftwere_custom_tools") || "[]");
+        if (!Array.isArray(list)) list = [];
+    } catch(e) {
+        list = [];
+    }
 
-    await refreshCustomSoftware();
+    let removedIds = [];
+    try {
+        removedIds = JSON.parse(localStorage.getItem("mysoftwere_removed_tools") || "[]");
+    } catch(e) { removedIds = []; }
+    if (!Array.isArray(removedIds)) removedIds = [];
+    removedIds = removedIds.filter(x => String(x) !== String(item.id));
+    localStorage.setItem("mysoftwere_removed_tools", JSON.stringify(removedIds));
 
-    nameEl.value="";
-    urlEl.value="";
-    passEl.value="";
+    list.push(item);
+    localStorage.setItem("mysoftwere_custom_tools", JSON.stringify(list));
+
+    createCustomSoftwareCard(item);
+
+    nameEl.value = "";
+    urlEl.value = "";
+    passEl.value = "";
     closeAddSoftware();
 
-    const msg=$("addMessage");
-    if(msg){
-        msg.textContent="✅ "+name+" সফলভাবে যোগ হয়েছে।";
-        setTimeout(()=>msg.textContent="",4000);
+    const msg = $("addMessage");
+    if (msg){
+        msg.textContent = "✅ " + name + " সফলভাবে যোগ হয়েছে।";
+        setTimeout(() => { msg.textContent = ""; }, 4000);
     }
 }
 
@@ -1785,31 +1779,26 @@ function enableSoftwareDragDrop(){
 
 
 function adminPasswordOK(){
-    const password=prompt("Admin password দিন:");
-    if(password===null||!password)return false;
-    window._mySoftwereAdminPassword=password;
+    const password = prompt("Admin password দিন:");
+    if (password === null) return false;
+    if (password !== ADD_SOFTWARE_PASSWORD){
+        alert("❌ Password ভুল!");
+        return false;
+    }
     return true;
 }
 
 function getCustomList(){
-    return Array.isArray(window._mySoftwereCustomList)
-        ? window._mySoftwereCustomList : [];
+    let list = [];
+    try { list = JSON.parse(localStorage.getItem("mysoftwere_custom_tools") || "[]"); }
+    catch(e) { list = []; }
+    return Array.isArray(list) ? list : [];
 }
 
 function saveCustomList(list){
-    window._mySoftwereCustomList=Array.isArray(list)?list:[];
+    localStorage.setItem("mysoftwere_custom_tools", JSON.stringify(list));
 }
 
-async function refreshCustomSoftware(){
-    const list=await apiGet();
-    saveCustomList(list);
-    document.querySelectorAll(".custom-software-card").forEach(el=>el.remove());
-    list.forEach(createCustomSoftwareCard);
-    if(adminEditUnlocked){
-        try{addAdminControlsToCustomCards();}catch(e){}
-    }
-    try{applyAllSoftwareOrder();}catch(e){}
-}
 
 function openAdminPasswordModal(){
     const modal = $("adminPasswordModal");
@@ -1964,112 +1953,106 @@ function editBuiltInSoftware(card){
     alert("✅ Software updated.");
 }
 
-async function editCustomSoftware(id, alreadyVerified=false){
-    let password=window._mySoftwereAdminPassword;
-    if(!password){
-        password=prompt("Admin password দিন:");
-        if(password===null||!password)return;
-        window._mySoftwereAdminPassword=password;
-    }
+function editCustomSoftware(id, alreadyVerified=false){
+    if (!alreadyVerified && !adminPasswordOK()) return;
 
-    const item=getCustomList().find(x=>String(x.id)===String(id));
-    if(!item)return;
+    const list = getCustomList();
+    const item = list.find(x => String(x.id) === String(id));
+    if (!item) return;
 
-    const name=prompt("Software/Website name:",item.name);
-    if(name===null)return;
+    const name = prompt("Software/Website name:", item.name);
+    if (name === null) return;
 
-    const url=prompt("Website link:",item.url);
-    if(url===null)return;
+    const url = prompt("Website link:", item.url);
+    if (url === null) return;
 
     let parsed;
-    try{
-        parsed=new URL(url.trim());
-        if(!["http:","https:"].includes(parsed.protocol))throw new Error();
-    }catch(e){
-        alert("❌ সঠিক website link দিন.");
+    try {
+        parsed = new URL(url.trim());
+        if (!["http:","https:"].includes(parsed.protocol)) throw new Error();
+    } catch(e) {
+        alert("❌ সঠিক website link দিন।");
         return;
     }
 
-    const category=prompt("Category (utility / html / pdf):",item.category||"utility");
-    if(category===null)return;
+    const category = prompt("Category (utility / html / pdf):", item.category || "utility");
+    if (category === null) return;
 
-    const description=prompt("Description:",item.description||"");
-    if(description===null)return;
+    item.name = name.trim() || item.name;
+    item.url = parsed.href;
+    item.category = category.trim().toLowerCase() || "utility";
 
-    await apiPost({
-        action:"edit",
-        id:id,
-        password:password,
-        item:{
-            name:name.trim()||item.name,
-            url:parsed.href,
-            category:category.trim().toLowerCase()||"utility",
-            description:description.trim()
-        }
-    });
+    saveCustomList(list);
 
-    await refreshCustomSoftware();
+    const oldCard = document.querySelector('[data-custom-id="' + String(id) + '"]');
+    if (oldCard) oldCard.remove();
+    createCustomSoftwareCard(item);
 }
 
-async function moveCustomSoftware(id, direction, alreadyVerified=false){
-    let password=window._mySoftwereAdminPassword;
-    if(!password){
-        password=prompt("Admin password দিন:");
-        if(password===null||!password)return;
-        window._mySoftwereAdminPassword=password;
-    }
+function moveCustomSoftware(id, direction, alreadyVerified=false){
+    if (!alreadyVerified && !adminPasswordOK()) return;
 
-    const list=getCustomList();
-    const index=list.findIndex(x=>String(x.id)===String(id));
-    if(index<0)return;
+    const list = getCustomList();
+    const index = list.findIndex(x => String(x.id) === String(id));
+    if (index < 0) return;
 
-    const target=direction==="up"?index-1:index+1;
-    if(target<0||target>=list.length){
-        alert(direction==="up"?"এটা ইতিমধ্যে সবচেয়ে উপরে আছে।":"এটা ইতিমধ্যে সবচেয়ে নিচে আছে।");
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= list.length){
+        alert(direction === "up" ? "এটা ইতিমধ্যে সবচেয়ে উপরে আছে।" : "এটা ইতিমধ্যে সবচেয়ে নিচে আছে।");
         return;
     }
 
-    const ids=list.map(x=>String(x.id));
-    [ids[index],ids[target]]=[ids[target],ids[index]];
+    const temp = list[index];
+    list[index] = list[newIndex];
+    list[newIndex] = temp;
+    saveCustomList(list);
 
-    await apiPost({action:"reorder",ids:ids,password:password});
-    await refreshCustomSoftware();
+    // Rebuild only custom cards, preserving the site's original cards.
+    document.querySelectorAll(".custom-software-card").forEach(el => el.remove());
+    list.forEach(createCustomSoftwareCard);
 }
 
-async function moveCustomToTop(id, alreadyVerified=false){
-    let password=window._mySoftwereAdminPassword;
-    if(!password){
-        password=prompt("Admin password দিন:");
-        if(password===null||!password)return;
-        window._mySoftwereAdminPassword=password;
-    }
+function moveCustomToTop(id, alreadyVerified=false){
+    if (!alreadyVerified && !adminPasswordOK()) return;
 
-    const list=getCustomList();
-    const index=list.findIndex(x=>String(x.id)===String(id));
-    if(index<0)return;
+    const list = getCustomList();
+    const index = list.findIndex(x => String(x.id) === String(id));
+    if (index < 0) return;
 
-    const ids=list.map(x=>String(x.id));
-    const moved=ids.splice(index,1)[0];
-    ids.unshift(moved);
+    const item = list.splice(index, 1)[0];
+    list.unshift(item);
+    saveCustomList(list);
 
-    await apiPost({action:"reorder",ids:ids,password:password});
-    await refreshCustomSoftware();
+    document.querySelectorAll(".custom-software-card").forEach(el => el.remove());
+    list.forEach(createCustomSoftwareCard);
 }
 
-async function removeCustomSoftware(id, alreadyVerified=false){
-    let password=window._mySoftwereAdminPassword;
-    if(!password){
-        password=prompt("Admin password দিন:");
-        if(password===null||!password)return;
-        window._mySoftwereAdminPassword=password;
+function removeCustomSoftware(id, alreadyVerified=false){
+    if (!alreadyVerified && !adminPasswordOK()) return;
+
+    let list = [];
+    let removed = [];
+    try {
+        list = JSON.parse(localStorage.getItem("mysoftwere_custom_tools") || "[]");
+        removed = JSON.parse(localStorage.getItem("mysoftwere_removed_tools") || "[]");
+    } catch(e) { list = []; removed = []; }
+
+    if (!Array.isArray(list)) list = [];
+    if (!Array.isArray(removed)) removed = [];
+
+    list = list.filter(x => String(x.id) !== String(id));
+    if (!removed.includes(String(id))) removed.push(String(id));
+
+    localStorage.setItem("mysoftwere_custom_tools", JSON.stringify(list));
+    localStorage.setItem("mysoftwere_removed_tools", JSON.stringify(removed));
+
+    const card = document.querySelector('[data-custom-id="' + String(id) + '"]');
+    if (card) {
+        card.style.transition = "opacity .2s, transform .2s";
+        card.style.opacity = "0";
+        card.style.transform = "scale(.96)";
+        setTimeout(() => card.remove(), 220);
     }
-
-    const item=getCustomList().find(x=>String(x.id)===String(id));
-    if(!item)return;
-    if(!confirm("এই software remove করতে চান?"))return;
-
-    await apiPost({action:"delete",id:id,password:password});
-    await refreshCustomSoftware();
 }
 
 function escapeHtml(s){
@@ -2418,11 +2401,123 @@ function ensureDefaultRocketIndexer(){
     }
 }
 
-async function loadCustomSoftware(){
-    await refreshCustomSoftware();
+function loadCustomSoftware(){
+    let list = [];
+    try {
+        list = JSON.parse(localStorage.getItem("mysoftwere_custom_tools") || "[]");
+        if (!Array.isArray(list)) list = [];
+    } catch(e) {
+        list = [];
+    }
+    list.forEach(createCustomSoftwareCard);
 }
 
 /* Wire the button without relying only on inline onclick. */
+
+/* =========================================================
+   GOOGLE SHEET SOFTWARE SYNC
+   Public index reads the software list from Google Apps Script.
+   Existing design/card CSS is kept unchanged.
+   ========================================================= */
+const GOOGLE_SOFTWARE_API = "https://script.google.com/macros/s/AKfycbxeD6VqiZPxx4q0_y7WzxBDQta2z9Vd7w3h0nnSSBq59rTV308BfTO2kv-PUi6g9Adx/exec";
+
+function loadGoogleSoftwareToIndex(){
+    return new Promise(function(resolve){
+        const cb = "mysoftwere_index_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+        const script = document.createElement("script");
+        let finished = false;
+
+        function cleanup(){
+            if (script.parentNode) script.parentNode.removeChild(script);
+            try { delete window[cb]; } catch(e) { window[cb] = undefined; }
+        }
+
+        window[cb] = function(data){
+            if (finished) return;
+            finished = true;
+            cleanup();
+            if (!Array.isArray(data)) return resolve(false);
+
+            // Only replace the built-in cards when the Google Sheet has data.
+            // If the sheet is empty, the original index design/content remains.
+            if (data.length === 0) return resolve(false);
+
+            const grid = document.getElementById("softwareGrid");
+            if (!grid) return resolve(false);
+
+            grid.innerHTML = "";
+            data.sort(function(a,b){
+                return (Number(a.position)||0) - (Number(b.position)||0);
+            }).forEach(function(item, index){
+                const card = document.createElement("article");
+                const category = String(item.category || "utility").toLowerCase();
+                const categoryLabel = category === "html" ? "HTML Tool" :
+                                      category === "pdf" ? "PDF Tool" : "Utility";
+                const name = String(item.name || "Software");
+                const url = String(item.url || "#");
+                const description = String(item.description || "Useful software and online tool.");
+                const icon = category === "html" ? "🌐" : category === "pdf" ? "📄" : "⚡";
+
+                card.className = "software-card";
+                card.dataset.category = category;
+                card.dataset.name = name.toLowerCase();
+                card.dataset.adminId = String(item.id || ("google-" + index));
+
+                card.innerHTML = `
+                    <div class="card-top">${icon}</div>
+                    <div class="card-body">
+                        <span class="badge"></span>
+                        <h3></h3>
+                        <p></p>
+                        <div class="card-meta">
+                            <span>Online Tool</span>
+                            <span>Free</span>
+                        </div>
+                        <div class="card-buttons">
+                            <a class="btn btn-primary" target="_blank" rel="noopener noreferrer">Open Tool</a>
+                            <button class="btn btn-secondary" type="button">Details</button>
+                        </div>
+                    </div>`;
+
+                card.querySelector(".badge").textContent = categoryLabel;
+                card.querySelector("h3").textContent = name;
+                card.querySelector("p").textContent = description;
+                card.querySelector("a").href = url;
+                card.querySelector("button").onclick = function(){
+                    showDetails(name, description, categoryLabel, url);
+                };
+                grid.appendChild(card);
+            });
+
+            // Google Sheet is now the public source of truth.
+            try { localStorage.removeItem("mysoftwere_removed_all_software"); } catch(e) {}
+            resolve(true);
+        };
+
+        script.onerror = function(){
+            if (finished) return;
+            finished = true;
+            cleanup();
+            resolve(false);
+        };
+
+        script.src = GOOGLE_SOFTWARE_API + "?callback=" + encodeURIComponent(cb) + "&_=" + Date.now();
+        document.body.appendChild(script);
+
+        setTimeout(function(){
+            if (finished) return;
+            finished = true;
+            cleanup();
+            resolve(false);
+        }, 10000);
+    });
+}
+
+// Refresh search/category references after Google cards are rendered.
+function refreshIndexAfterGoogleLoad(){
+    if (typeof searchSoftware === "function" && searchInput) searchSoftware();
+}
+
 document.addEventListener("DOMContentLoaded", function(){
     ensureDefaultRocketIndexer();
     const addBtn = document.querySelector('#addSoftware button.add-software-btn');
@@ -2442,10 +2537,9 @@ document.addEventListener("DOMContentLoaded", function(){
         });
     }
 
-    loadCustomSoftware().then(()=>{
-        initAllSoftwareAdmin();
-        enableSoftwareDragDrop();
-    });
+    loadCustomSoftware();
+    initAllSoftwareAdmin();
+    enableSoftwareDragDrop();
 });
 
 window.toggleAdminEditMode = toggleAdminEditMode;
@@ -2460,6 +2554,17 @@ window.removeCustomSoftware = removeCustomSoftware;
 window.editCustomSoftware = editCustomSoftware;
 window.moveCustomSoftware = moveCustomSoftware;
 window.moveCustomToTop = moveCustomToTop;
+</script>
+
+
+<script>
+// Load Google Sheet data after the original page has initialized.
+// This keeps the original design intact while making admin changes visible on index.html.
+document.addEventListener("DOMContentLoaded", function(){
+    loadGoogleSoftwareToIndex().then(function(loaded){
+        if (loaded) refreshIndexAfterGoogleLoad();
+    });
+});
 </script>
 
 </body>
