@@ -5,42 +5,78 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MySoftwere Admin</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f6f9;color:#111827}.wrap{max-width:900px;margin:35px auto;padding:20px}.box{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:25px;box-shadow:0 8px 25px rgba(0,0,0,.06);margin-bottom:20px}h1{margin-top:0}label{display:block;font-weight:700;margin:12px 0 6px}input,select,textarea{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:8px;font-size:14px}textarea{min-height:80px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.btn{border:0;border-radius:8px;padding:11px 15px;font-weight:700;cursor:pointer}.primary{background:#2563eb;color:#fff}.green{background:#16a34a;color:#fff}.red{background:#dc2626;color:#fff}.gray{background:#e5e7eb;color:#111827}.item{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid #e5e7eb;border-radius:10px;margin:10px 0;background:#fff}.item-main{flex:1;min-width:0}.item-main strong{display:block}.item-main small{color:#6b7280;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.actions{display:flex;gap:6px;flex-wrap:wrap}.status{margin-top:10px;font-weight:700}.hint{color:#6b7280;font-size:14px}.drag{cursor:grab}.dragging{opacity:.5}@media(max-width:600px){.row{grid-template-columns:1fr}.item{align-items:flex-start;flex-direction:column}.actions{width:100%}.actions .btn{flex:1}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f6f9;color:#222}
+.wrap{max-width:1000px;margin:30px auto;padding:20px}.card{background:#fff;padding:22px;border-radius:12px;margin-bottom:20px;box-shadow:0 3px 15px rgba(0,0,0,.07)}
+h1,h2{margin-top:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:8px;font-size:15px}
+textarea{min-height:90px}.field{margin-bottom:14px}.field label{display:block;font-weight:bold;margin-bottom:6px}
+button{border:0;border-radius:8px;padding:10px 16px;cursor:pointer;font-weight:bold;margin:3px}
+.primary{background:#2563eb;color:#fff}.success{background:#16a34a;color:#fff}.danger{background:#dc2626;color:#fff}.gray{background:#6b7280;color:#fff}
+.status{padding:10px;border-radius:8px;margin:10px 0;display:none}.ok{display:block;background:#dcfce7;color:#166534}.err{display:block;background:#fee2e2;color:#991b1b}
+.item{display:flex;align-items:center;gap:12px;padding:13px;margin:8px 0;background:#f9fafb;border:1px solid #e5e7eb;border-radius:9px}
+.info{flex:1}.name{font-weight:bold;font-size:16px}.meta{font-size:12px;color:#6b7280;margin-top:3px}.drag{font-size:20px;color:#999}.actions{white-space:nowrap}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.item{align-items:flex-start}.actions{white-space:normal}}
 </style>
 </head>
 <body>
+<div id="login" class="card" style="max-width:430px;margin:80px auto">
+<h1>MySoftwere Admin</h1>
+<p>Admin password দিন।</p>
+<input id="pw" type="password" placeholder="Password">
+<button class="primary" onclick="login()">Login</button>
+<div id="loginMsg" class="status"></div>
+</div>
+
+<div id="app" style="display:none">
 <div class="wrap">
-<div class="box">
-<h1>🛠️ MySoftwere Admin</h1>
-<p class="hint">এখান থেকে software যোগ, edit, delete এবং position পরিবর্তন করুন। Save করার পর সবাই একই list দেখতে পাবে।</p>
-<label>Admin Password</label><input id="password" type="password" placeholder="Admin password">
-<button class="btn primary" style="margin-top:12px" onclick="unlock()">Unlock</button>
-<div id="loginStatus" class="status"></div>
+<div class="card">
+<h1>MySoftwere Admin Panel</h1>
+<div id="msg" class="status"></div>
+<div class="grid">
+<div class="field"><label>Name</label><input id="name" placeholder="Software name"></div>
+<div class="field"><label>URL</label><input id="url" placeholder="https://example.com"></div>
+<div class="field"><label>Category</label>
+<select id="category"><option value="html">HTML</option><option value="software">Software</option><option value="tool">Online Tool</option><option value="app">App</option><option value="game">Game</option><option value="other">Other</option></select></div>
+<div class="field"><label>Description</label><input id="description" placeholder="Short description"></div>
+</div>
+<button id="save" class="success" onclick="save()">Add Software</button>
+<button id="cancel" class="gray" onclick="cancelEdit()" style="display:none">Cancel</button>
 </div>
 
-<div class="box" id="panel" style="display:none">
-<h2>➕ Add Software</h2>
-<div class="row"><div><label>Name</label><input id="name" placeholder="My PDF Tool"></div><div><label>URL</label><input id="url" placeholder="https://mysoftwere.github.io/mytool/"></div></div>
-<div class="row"><div><label>Category</label><select id="category"><option value="html">HTML Tool</option><option value="pdf">PDF Tool</option><option value="utility">Utility</option></select></div><div><label>Description</label><input id="description" placeholder="Short description"></div></div>
-<button class="btn green" style="margin-top:15px" onclick="addSoftware()">Add Software</button>
-<div id="formStatus" class="status"></div>
+<div class="card">
+<h2>Software List</h2>
+<p>☰ ধরে drag করে position বদলান, তারপর Save Position চাপুন।</p>
+<button class="primary" onclick="load()">Refresh</button>
+<button class="primary" onclick="saveOrder()">Save Position</button>
+<div id="list">Loading...</div>
+</div>
+</div>
 </div>
 
-<div class="box" id="listBox" style="display:none"><h2>📋 Shared Software List</h2><p class="hint">Drag করে position পরিবর্তন করুন, অথবা Edit/Delete চাপুন।</p><div id="list"></div></div>
-</div>
 <script>
-const API_URL='PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
-let adminPassword='';let software=[];
-const $=id=>document.getElementById(id);
-function unlock(){adminPassword=$('password').value;if(!adminPassword){$('loginStatus').textContent='Password দিন।';return} $('panel').style.display='block';$('listBox').style.display='block';$('loginStatus').textContent='✅ Admin panel unlocked.';load();}
-function jsonp(){return new Promise(resolve=>{const cb='adminCB'+Date.now();window[cb]=d=>{delete window[cb];s.remove();resolve(Array.isArray(d)?d:d||[])};const s=document.createElement('script');s.src=API_URL+'?callback='+cb;s.onerror=()=>{delete window[cb];s.remove();resolve([])};document.body.appendChild(s)})}
-async function load(){software=await jsonp();render()}
-function render(){const box=$('list');box.innerHTML='';software.forEach((x,i)=>{const d=document.createElement('div');d.className='item drag';d.draggable=true;d.dataset.id=x.id;d.innerHTML=`<div class="item-main"><strong>${esc(x.name)}</strong><small>${esc(x.url)}</small><small>${esc(x.category)} • ${esc(x.description||'')}</small></div><div class="actions"><button class="btn gray" onclick="editSoftware('${js(x.id)}')">Edit</button><button class="btn red" onclick="deleteSoftware('${js(x.id)}')">Delete</button></div>`;d.addEventListener('dragstart',()=>d.classList.add('dragging'));d.addEventListener('dragend',()=>{d.classList.remove('dragging');saveOrder()});d.addEventListener('dragover',e=>{e.preventDefault();const drag=document.querySelector('.dragging');if(!drag||drag===d)return;const r=d.getBoundingClientRect();if(e.clientY<r.top+r.height/2)d.before(drag);else d.after(drag)});box.appendChild(d)})}
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}function js(s){return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
-async function post(payload){await fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...payload,password:adminPassword})});await new Promise(r=>setTimeout(r,900));return true}
-async function addSoftware(){const name=$('name').value.trim(),url=$('url').value.trim(),category=$('category').value,description=$('description').value.trim();if(!name||!/^https?:\\/\\//i.test(url)){ $('formStatus').textContent='❌ Name ও সঠিক URL দিন।';return} $('formStatus').textContent='⏳ Saving...';await post({action:'add',item:{name,url,category,description,id:'sw-'+Date.now()}});$('name').value='';$('url').value='';$('description').value='';$('formStatus').textContent='✅ Added. Reloading list...';await load()}
-async function editSoftware(id){const x=software.find(a=>a.id===id);if(!x)return;const name=prompt('Software name:',x.name);if(name===null)return;const url=prompt('Website URL:',x.url);if(url===null)return;const category=prompt('Category (html / pdf / utility):',x.category);if(category===null)return;const description=prompt('Description:',x.description||'');if(description===null)return;if(!/^https?:\\/\\//i.test(url.trim())){alert('সঠিক URL দিন।');return}await post({action:'edit',id,item:{name:name.trim(),url:url.trim(),category:category.trim().toLowerCase(),description:description.trim()}});await load()}
-async function deleteSoftware(id){const x=software.find(a=>a.id===id);if(!x||!confirm('Delete '+x.name+'?'))return;await post({action:'delete',id});await load()}
-async function saveOrder(){const ids=[...document.querySelectorAll('#list .item')].map(x=>x.dataset.id);await post({action:'reorder',ids});software=await jsonp();render()}
+const API_URL="https://script.google.com/macros/s/AKfycbxeD6VqiZPxx4q0_y7WzxBDQta2z9Vd7w3h0nnSSBq59rTV308BfTO2kv-PUi6g9Adx/exec";
+const ADMIN_PASSWORD="Freefire645268756625800";
+let password=ADMIN_PASSWORD,items=[],editId=null,dragged=null;
+
+function msg(t,e=false){let x=document.getElementById("msg");x.textContent=t;x.className="status "+(e?"err":"ok");setTimeout(()=>x.className="status",3500)}
+function login(){if(document.getElementById("pw").value!==ADMIN_PASSWORD){let x=document.getElementById("loginMsg");x.textContent="Wrong password";x.className="status err";return}document.getElementById("login").style.display="none";document.getElementById("app").style.display="block";load()}
+document.getElementById("pw").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+
+function getData(){return new Promise((resolve,reject)=>{let cb="cb_"+Date.now();let s=document.createElement("script");window[cb]=d=>{delete window[cb];s.remove();resolve(Array.isArray(d)?d:[])};s.onerror=()=>{delete window[cb];s.remove();reject(new Error("Connection failed"))};s.src=API_URL+"?callback="+cb+"&_="+Date.now();document.body.appendChild(s)})}
+async function load(){try{items=await getData();render()}catch(e){msg("Google Apps Script connection failed",true)}}
+
+function render(){let l=document.getElementById("list");if(!items.length){l.innerHTML="<p>No software found.</p>";return}l.innerHTML="";items.forEach(x=>{let d=document.createElement("div");d.className="item";d.draggable=true;d.dataset.id=x.id;d.innerHTML='<div class="drag">☰</div><div class="info"><div class="name">'+esc(x.name)+'</div><div class="meta">'+esc(x.category||"")+" • "+esc(x.url||"")+'</div><div class="meta">'+esc(x.description||"")+'</div></div><div class="actions"><button class="primary" onclick="edit(\''+js(x.id)+'\')">Edit</button><button class="danger" onclick="del(\''+js(x.id)+'\')">Delete</button></div>';d.addEventListener("dragstart",()=>{dragged=d;d.style.opacity=.5});d.addEventListener("dragend",()=>{d.style.opacity=1;dragged=null});d.addEventListener("dragover",e=>{e.preventDefault();if(!dragged||dragged===d)return;if([...l.children].indexOf(dragged)<[...l.children].indexOf(d))l.insertBefore(dragged,d.nextSibling);else l.insertBefore(dragged,d)});l.appendChild(d)})}
+
+function post(p){return fetch(API_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...p,password})}).then(()=>new Promise(r=>setTimeout(r,700)))}
+async function save(){let name=v("name"),url=v("url"),category=v("category"),description=v("description");if(!name||!url)return msg("Name and URL are required",true);try{if(editId)await post({action:"edit",id:editId,item:{name,url,category,description}});else await post({action:"add",item:{id:slug(name)+"-"+Date.now(),name,url,category,description}});msg(editId?"Updated successfully":"Added successfully");cancelEdit();load()}catch(e){msg("Save failed",true)}}
+function edit(id){let x=items.find(a=>String(a.id)===String(id));if(!x)return;editId=id;document.getElementById("name").value=x.name||"";document.getElementById("url").value=x.url||"";document.getElementById("category").value=x.category||"html";document.getElementById("description").value=x.description||"";document.getElementById("save").textContent="Update Software";document.getElementById("cancel").style.display="inline-block";scrollTo({top:0,behavior:"smooth"})}
+function cancelEdit(){editId=null;["name","url","description"].forEach(id=>document.getElementById(id).value="");document.getElementById("category").value="html";document.getElementById("save").textContent="Add Software";document.getElementById("cancel").style.display="none"}
+async function del(id){let x=items.find(a=>String(a.id)===String(id));if(!x||!confirm("Delete "+x.name+"?"))return;try{await post({action:"delete",id});msg("Deleted successfully");load()}catch(e){msg("Delete failed",true)}}
+async function saveOrder(){let ids=[...document.querySelectorAll(".item")].map(x=>x.dataset.id);try{await post({action:"reorder",ids});msg("Position saved");load()}catch(e){msg("Position save failed",true)}}
+function v(id){return document.getElementById(id).value.trim()}
+function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"software"}
+function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function js(s){return String(s??"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,'\\"')}
 </script>
-</body></html>
+</body>
+</html>
