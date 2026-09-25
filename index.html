@@ -1463,7 +1463,7 @@ body.dark .logo span{
 
 <script>
 const searchInput = document.getElementById("searchInput");
-let cards = document.querySelectorAll(".software-card");
+let cards = document.querySelectorAll("#softwareGrid .software-card");
 const noResult = document.getElementById("noResult");
 
 searchInput.addEventListener("keyup", function(){
@@ -2453,128 +2453,134 @@ window.moveCustomToTop = moveCustomToTop;
 
 <script>
 /* =========================================================
-   GOOGLE SHEET SYNC — keeps ALL original MySoftwere cards
-   and adds/updates only the software managed from admin.html.
+   GOOGLE SHEET SYNC — stable public index connection
+   Keeps every original card and adds only admin-managed cards.
    ========================================================= */
 const GOOGLE_SOFTWARE_API = "https://script.google.com/macros/s/AKfycbxeD6VqiZPxx4q0_y7WzxBDQta2z9Vd7w3h0nnSSBq59rTV308BfTO2kv-PUi6g9Adx/exec";
 
-function refreshSoftwareCardReferences(){
+function refreshSoftwareCards(){
     cards = document.querySelectorAll("#softwareGrid .software-card");
 }
 
-function createGoogleSoftwareCard(item, index){
+function createSheetSoftwareCard(item){
     const card = document.createElement("article");
     const category = String(item.category || "utility").toLowerCase();
-    const categoryLabel = category === "html" ? "HTML Tool" :
-                          category === "pdf" ? "PDF Tool" : "Utility";
+    const label = category === "html" ? "HTML Tool" : category === "pdf" ? "PDF Tool" : "Utility";
     const name = String(item.name || "Software");
     const url = String(item.url || "#");
     const description = String(item.description || "Useful software and online tool.");
     const icon = category === "html" ? "🌐" : category === "pdf" ? "📄" : "⚡";
 
-    card.className = "software-card google-software-card";
+    card.className = "software-card google-sheet-card";
     card.dataset.category = category;
     card.dataset.name = name.toLowerCase();
-    card.dataset.googleId = String(item.id || ("google-" + index));
-    card.dataset.position = String(Number(item.position) || (index + 1));
+    card.dataset.googleId = String(item.id || "");
+    card.dataset.position = String(item.position || "");
 
-    card.innerHTML = `
-        <div class="card-top">${icon}</div>
-        <div class="card-body">
-            <span class="badge"></span>
-            <h3></h3>
-            <p></p>
-            <div class="card-meta">
-                <span>Online Tool</span>
-                <span>Free</span>
-            </div>
-            <div class="card-buttons">
-                <a class="btn btn-primary" target="_blank" rel="noopener noreferrer">Open Tool</a>
-                <button class="btn btn-secondary" type="button">Details</button>
-            </div>
-        </div>`;
+    const top = document.createElement("div");
+    top.className = "card-top";
+    top.textContent = icon;
 
-    card.querySelector(".badge").textContent = categoryLabel;
-    card.querySelector("h3").textContent = name;
-    card.querySelector("p").textContent = description;
-    card.querySelector("a").href = url;
-    card.querySelector("button").onclick = function(){
-        showDetails(name, description, categoryLabel, url);
-    };
+    const body = document.createElement("div");
+    body.className = "card-body";
+
+    const badge = document.createElement("span");
+    badge.className = "badge";
+    badge.textContent = label;
+
+    const h3 = document.createElement("h3");
+    h3.textContent = name;
+
+    const p = document.createElement("p");
+    p.textContent = description;
+
+    const meta = document.createElement("div");
+    meta.className = "card-meta";
+    meta.innerHTML = "<span>Online Tool</span><span>Free</span>";
+
+    const buttons = document.createElement("div");
+    buttons.className = "card-buttons";
+
+    const open = document.createElement("a");
+    open.className = "btn btn-primary";
+    open.href = url;
+    open.target = "_blank";
+    open.rel = "noopener noreferrer";
+    open.textContent = "Open Tool";
+
+    const details = document.createElement("button");
+    details.className = "btn btn-secondary";
+    details.type = "button";
+    details.textContent = "Details";
+    details.onclick = function(){ showDetails(name, description, label, url); };
+
+    buttons.appendChild(open);
+    buttons.appendChild(details);
+    body.appendChild(badge);
+    body.appendChild(h3);
+    body.appendChild(p);
+    body.appendChild(meta);
+    body.appendChild(buttons);
+    card.appendChild(top);
+    card.appendChild(body);
     return card;
 }
 
-function syncGoogleSoftwareToIndex(data){
+function syncGoogleSheetSoftware(data){
     const grid = document.getElementById("softwareGrid");
     if (!grid || !Array.isArray(data)) return;
 
-    // Remove only the cards previously loaded from Google Sheet.
-    grid.querySelectorAll(".google-software-card").forEach(function(card){ card.remove(); });
+    // Remove only previously loaded Sheet cards; NEVER remove original cards.
+    grid.querySelectorAll(".google-sheet-card").forEach(function(card){ card.remove(); });
 
-    // Do NOT delete or replace any original/custom card.
     const items = data.slice().sort(function(a,b){
-        const pa = Number(a.position);
-        const pb = Number(b.position);
-        return (Number.isFinite(pa) ? pa : 999999) - (Number.isFinite(pb) ? pb : 999999);
+        return (Number(a.position) || 999999) - (Number(b.position) || 999999);
     });
 
     items.forEach(function(item, index){
-        const card = createGoogleSoftwareCard(item, index);
-        const position = Math.max(1, parseInt(item.position, 10) || (index + 1));
-        const existingCards = grid.querySelectorAll(":scope > .software-card:not(.google-software-card)");
-        const target = existingCards[position - 1];
+        const card = createSheetSoftwareCard(item);
+        const position = Math.max(1, Number(item.position) || (index + 1));
+        const originals = grid.querySelectorAll(":scope > .software-card:not(.google-sheet-card)");
+        const target = originals[position - 1];
         if (target) target.before(card);
         else grid.appendChild(card);
     });
 
-    refreshSoftwareCardReferences();
+    refreshSoftwareCards();
 }
 
-function loadGoogleSoftwareToIndex(){
-    return new Promise(function(resolve){
-        const cb = "mysoftwere_index_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
-        const script = document.createElement("script");
-        let finished = false;
+function loadGoogleSheetSoftware(){
+    const callback = "mysoftwere_sheet_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+    const script = document.createElement("script");
+    let done = false;
 
-        function cleanup(){
-            if (script.parentNode) script.parentNode.removeChild(script);
-            try { delete window[cb]; } catch(e) { window[cb] = undefined; }
-        }
+    function finish(ok){
+        if (done) return;
+        done = true;
+        if (script.parentNode) script.parentNode.removeChild(script);
+        try { delete window[callback]; } catch(e) {}
+    }
 
-        window[cb] = function(data){
-            if (finished) return;
-            finished = true;
-            cleanup();
-            if (!Array.isArray(data)) { resolve(false); return; }
-            syncGoogleSoftwareToIndex(data);
+    window[callback] = function(data){
+        finish(true);
+        if (Array.isArray(data)) {
+            syncGoogleSheetSoftware(data);
             if (typeof searchSoftware === "function") searchSoftware();
-            resolve(true);
-        };
+        }
+    };
 
-        script.onerror = function(){
-            if (finished) return;
-            finished = true;
-            cleanup();
-            resolve(false);
-        };
+    script.onerror = function(){ finish(false); };
+    script.src = GOOGLE_SOFTWARE_API + "?callback=" + encodeURIComponent(callback) + "&_=" + Date.now();
+    document.body.appendChild(script);
 
-        script.src = GOOGLE_SOFTWARE_API + "?callback=" + encodeURIComponent(cb) + "&_=" + Date.now();
-        document.body.appendChild(script);
-
-        setTimeout(function(){
-            if (finished) return;
-            finished = true;
-            cleanup();
-            resolve(false);
-        }, 10000);
-    });
+    setTimeout(function(){ finish(false); }, 10000);
 }
 
-// Refresh the card list after Google Sheet cards are inserted.
 document.addEventListener("DOMContentLoaded", function(){
-    refreshSoftwareCardReferences();
-    loadGoogleSoftwareToIndex();
+    refreshSoftwareCards();
+    loadGoogleSheetSoftware();
 });
 </script>
+
 </body>
 </html>
