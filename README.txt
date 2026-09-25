@@ -12,4 +12,4 @@ GitHub:
 
 Google Apps Script:
 - Code.gs must already be deployed as the Web App.
-- Password: Freefire645268756625800
+- Password: 
