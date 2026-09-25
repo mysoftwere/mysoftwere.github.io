@@ -5,78 +5,376 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MySoftwere Admin</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f6f9;color:#222}
-.wrap{max-width:1000px;margin:30px auto;padding:20px}.card{background:#fff;padding:22px;border-radius:12px;margin-bottom:20px;box-shadow:0 3px 15px rgba(0,0,0,.07)}
-h1,h2{margin-top:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-input,select,textarea{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:8px;font-size:15px}
-textarea{min-height:90px}.field{margin-bottom:14px}.field label{display:block;font-weight:bold;margin-bottom:6px}
-button{border:0;border-radius:8px;padding:10px 16px;cursor:pointer;font-weight:bold;margin:3px}
-.primary{background:#2563eb;color:#fff}.success{background:#16a34a;color:#fff}.danger{background:#dc2626;color:#fff}.gray{background:#6b7280;color:#fff}
-.status{padding:10px;border-radius:8px;margin:10px 0;display:none}.ok{display:block;background:#dcfce7;color:#166534}.err{display:block;background:#fee2e2;color:#991b1b}
-.item{display:flex;align-items:center;gap:12px;padding:13px;margin:8px 0;background:#f9fafb;border:1px solid #e5e7eb;border-radius:9px}
-.info{flex:1}.name{font-weight:bold;font-size:16px}.meta{font-size:12px;color:#6b7280;margin-top:3px}.drag{font-size:20px;color:#999}.actions{white-space:nowrap}
-@media(max-width:700px){.grid{grid-template-columns:1fr}.item{align-items:flex-start}.actions{white-space:normal}}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
+.container{max-width:1100px;margin:35px auto;padding:0 16px}
+.card{background:#fff;border-radius:14px;padding:22px;margin-bottom:18px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+h1{margin-top:0}
+input,select,textarea{width:100%;padding:12px;border:1px solid #d7dce5;border-radius:8px;margin:6px 0 12px;font-size:15px}
+textarea{min-height:90px;resize:vertical}
+button{border:0;border-radius:8px;padding:11px 16px;cursor:pointer;font-weight:600;margin:4px}
+.primary{background:#1769ff;color:white}
+.secondary{background:#eef2f7;color:#172033}
+.danger{background:#e53935;color:white}
+.hidden{display:none}
+#status{padding:10px;border-radius:8px;margin:10px 0;display:none}
+.item{display:flex;gap:12px;align-items:center;padding:14px;border:1px solid #e1e6ee;border-radius:10px;margin:9px 0;background:#fafbfd}
+.handle{cursor:grab;font-size:20px}
+.info{flex:1}
+.name{font-weight:700;font-size:17px}
+.meta{font-size:13px;color:#697386;margin-top:4px}
+.actions{white-space:nowrap}
+.login{max-width:450px;margin:90px auto}
+.small{font-size:13px;color:#687386}
+@media(max-width:700px){
+ .item{align-items:flex-start;flex-wrap:wrap}
+ .actions{width:100%}
+}
 </style>
 </head>
 <body>
-<div id="login" class="card" style="max-width:430px;margin:80px auto">
-<h1>MySoftwere Admin</h1>
-<p>Admin password দিন।</p>
-<input id="pw" type="password" placeholder="Password">
-<button class="primary" onclick="login()">Login</button>
-<div id="loginMsg" class="status"></div>
+
+<div id="loginBox" class="card login">
+  <h1>MySoftwere Admin</h1>
+  <p class="small">Admin password দিয়ে প্রবেশ করুন।</p>
+  <input id="loginPassword" type="password" placeholder="Admin Password">
+  <button class="primary" onclick="login()">Login</button>
+  <div id="loginStatus"></div>
 </div>
 
-<div id="app" style="display:none">
-<div class="wrap">
-<div class="card">
-<h1>MySoftwere Admin Panel</h1>
-<div id="msg" class="status"></div>
-<div class="grid">
-<div class="field"><label>Name</label><input id="name" placeholder="Software name"></div>
-<div class="field"><label>URL</label><input id="url" placeholder="https://example.com"></div>
-<div class="field"><label>Category</label>
-<select id="category"><option value="html">HTML</option><option value="software">Software</option><option value="tool">Online Tool</option><option value="app">App</option><option value="game">Game</option><option value="other">Other</option></select></div>
-<div class="field"><label>Description</label><input id="description" placeholder="Short description"></div>
-</div>
-<button id="save" class="success" onclick="save()">Add Software</button>
-<button id="cancel" class="gray" onclick="cancelEdit()" style="display:none">Cancel</button>
-</div>
+<div id="app" class="container hidden">
+  <div class="card">
+    <h1>MySoftwere Admin Panel</h1>
+    <p class="small">Software add, edit, delete এবং position/order manage করুন।</p>
+    <button class="secondary" onclick="loadSoftware()">Refresh</button>
+    <button class="secondary" onclick="logout()">Logout</button>
+    <div id="status"></div>
+  </div>
 
-<div class="card">
-<h2>Software List</h2>
-<p>☰ ধরে drag করে position বদলান, তারপর Save Position চাপুন।</p>
-<button class="primary" onclick="load()">Refresh</button>
-<button class="primary" onclick="saveOrder()">Save Position</button>
-<div id="list">Loading...</div>
-</div>
-</div>
+  <div class="card">
+    <h2 id="formTitle">Add Software</h2>
+    <input id="name" placeholder="Software Name">
+    <input id="url" placeholder="Software URL">
+    <select id="category">
+      <option value="utility">Utility</option>
+      <option value="html">HTML</option>
+      <option value="tool">Tool</option>
+      <option value="software">Software</option>
+      <option value="other">Other</option>
+    </select>
+    <textarea id="description" placeholder="Description"></textarea>
+    <button id="saveBtn" class="primary" onclick="saveSoftware()">Add Software</button>
+    <button id="cancelBtn" class="secondary hidden" onclick="cancelEdit()">Cancel Edit</button>
+  </div>
+
+  <div class="card">
+    <h2>Software List</h2>
+    <p class="small">উপরে/নিচে নিয়ে order পরিবর্তন করে Save Order চাপুন।</p>
+    <div id="list">Loading...</div>
+    <button class="primary" onclick="saveOrder()">Save Order</button>
+  </div>
 </div>
 
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbxeD6VqiZPxx4q0_y7WzxBDQta2z9Vd7w3h0nnSSBq59rTV308BfTO2kv-PUi6g9Adx/exec";
-const ADMIN_PASSWORD="Freefire645268756625800";
-let password=ADMIN_PASSWORD,items=[],editId=null,dragged=null;
+const API_URL = "https://script.google.com/macros/s/AKfycbxeD6VqiZPxx4q0_y7WzxBDQta2z9Vd7w3h0nnSSBq59rTV308BfTO2kv-PUi6g9Adx/exec";
+const ADMIN_PASSWORD = "Freefire645268756625800";
 
-function msg(t,e=false){let x=document.getElementById("msg");x.textContent=t;x.className="status "+(e?"err":"ok");setTimeout(()=>x.className="status",3500)}
-function login(){if(document.getElementById("pw").value!==ADMIN_PASSWORD){let x=document.getElementById("loginMsg");x.textContent="Wrong password";x.className="status err";return}document.getElementById("login").style.display="none";document.getElementById("app").style.display="block";load()}
-document.getElementById("pw").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+let software = [];
+let editingId = null;
 
-function getData(){return new Promise((resolve,reject)=>{let cb="cb_"+Date.now();let s=document.createElement("script");window[cb]=d=>{delete window[cb];s.remove();resolve(Array.isArray(d)?d:[])};s.onerror=()=>{delete window[cb];s.remove();reject(new Error("Connection failed"))};s.src=API_URL+"?callback="+cb+"&_="+Date.now();document.body.appendChild(s)})}
-async function load(){try{items=await getData();render()}catch(e){msg("Google Apps Script connection failed",true)}}
+function $(id){ return document.getElementById(id); }
 
-function render(){let l=document.getElementById("list");if(!items.length){l.innerHTML="<p>No software found.</p>";return}l.innerHTML="";items.forEach(x=>{let d=document.createElement("div");d.className="item";d.draggable=true;d.dataset.id=x.id;d.innerHTML='<div class="drag">☰</div><div class="info"><div class="name">'+esc(x.name)+'</div><div class="meta">'+esc(x.category||"")+" • "+esc(x.url||"")+'</div><div class="meta">'+esc(x.description||"")+'</div></div><div class="actions"><button class="primary" onclick="edit(\''+js(x.id)+'\')">Edit</button><button class="danger" onclick="del(\''+js(x.id)+'\')">Delete</button></div>';d.addEventListener("dragstart",()=>{dragged=d;d.style.opacity=.5});d.addEventListener("dragend",()=>{d.style.opacity=1;dragged=null});d.addEventListener("dragover",e=>{e.preventDefault();if(!dragged||dragged===d)return;if([...l.children].indexOf(dragged)<[...l.children].indexOf(d))l.insertBefore(dragged,d.nextSibling);else l.insertBefore(dragged,d)});l.appendChild(d)})}
+function showStatus(message, ok=true){
+  const el=$("status");
+  el.textContent=message;
+  el.style.display="block";
+  el.style.background=ok ? "#e9f8ee" : "#fdecec";
+  el.style.color=ok ? "#146c2e" : "#a51d2d";
+}
 
-function post(p){return fetch(API_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...p,password})}).then(()=>new Promise(r=>setTimeout(r,700)))}
-async function save(){let name=v("name"),url=v("url"),category=v("category"),description=v("description");if(!name||!url)return msg("Name and URL are required",true);try{if(editId)await post({action:"edit",id:editId,item:{name,url,category,description}});else await post({action:"add",item:{id:slug(name)+"-"+Date.now(),name,url,category,description}});msg(editId?"Updated successfully":"Added successfully");cancelEdit();load()}catch(e){msg("Save failed",true)}}
-function edit(id){let x=items.find(a=>String(a.id)===String(id));if(!x)return;editId=id;document.getElementById("name").value=x.name||"";document.getElementById("url").value=x.url||"";document.getElementById("category").value=x.category||"html";document.getElementById("description").value=x.description||"";document.getElementById("save").textContent="Update Software";document.getElementById("cancel").style.display="inline-block";scrollTo({top:0,behavior:"smooth"})}
-function cancelEdit(){editId=null;["name","url","description"].forEach(id=>document.getElementById(id).value="");document.getElementById("category").value="html";document.getElementById("save").textContent="Add Software";document.getElementById("cancel").style.display="none"}
-async function del(id){let x=items.find(a=>String(a.id)===String(id));if(!x||!confirm("Delete "+x.name+"?"))return;try{await post({action:"delete",id});msg("Deleted successfully");load()}catch(e){msg("Delete failed",true)}}
-async function saveOrder(){let ids=[...document.querySelectorAll(".item")].map(x=>x.dataset.id);try{await post({action:"reorder",ids});msg("Position saved");load()}catch(e){msg("Position save failed",true)}}
-function v(id){return document.getElementById(id).value.trim()}
-function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"software"}
-function esc(s){return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
-function js(s){return String(s??"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,'\\"')}
+function jsonp(){
+  return new Promise((resolve,reject)=>{
+    const cb="cb_"+Date.now()+"_"+Math.floor(Math.random()*100000);
+    const script=document.createElement("script");
+    const timer=setTimeout(()=>{
+      cleanup();
+      reject(new Error("Server response timeout"));
+    },15000);
+
+    window[cb]=(data)=>{
+      clearTimeout(timer);
+      cleanup();
+      resolve(data);
+    };
+
+    function cleanup(){
+      delete window[cb];
+      script.remove();
+    }
+
+    script.onerror=()=>{
+      clearTimeout(timer);
+      cleanup();
+      reject(new Error("Could not connect to Apps Script"));
+    };
+
+    script.src=API_URL+"?callback="+encodeURIComponent(cb)+"&_="+Date.now();
+    document.body.appendChild(script);
+  });
+}
+
+async function post(payload){
+  await fetch(API_URL,{
+    method:"POST",
+    mode:"no-cors",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify({
+      ...payload,
+      password:ADMIN_PASSWORD
+    })
+  });
+
+  await new Promise(r=>setTimeout(r,800));
+}
+
+async function loadSoftware(){
+  try{
+    const data=await jsonp();
+    software=Array.isArray(data)?data:[];
+    renderList();
+  }catch(err){
+    showStatus("Load failed: "+err.message,false);
+    $("list").innerHTML="<p>Software list load হয়নি। Apps Script deployment check করুন.</p>";
+  }
+}
+
+function renderList(){
+  const list=$("list");
+
+  if(!software.length){
+    list.innerHTML="<p>No software found.</p>";
+    return;
+  }
+
+  list.innerHTML="";
+
+  software.forEach((item,index)=>{
+    const row=document.createElement("div");
+    row.className="item";
+    row.draggable=true;
+    row.dataset.id=item.id;
+
+    row.innerHTML=`
+      <div class="handle">☰</div>
+      <div class="info">
+        <div class="name">${escapeHtml(item.name)}</div>
+        <div class="meta">
+          ${escapeHtml(item.category || "utility")} ·
+          Position ${index+1}
+          ${item.url ? " · "+escapeHtml(item.url) : ""}
+        </div>
+        <div class="small">${escapeHtml(item.description || "")}</div>
+      </div>
+      <div class="actions">
+        <button class="secondary" onclick="moveItem(${index},-1)">↑</button>
+        <button class="secondary" onclick="moveItem(${index},1)">↓</button>
+        <button class="primary" onclick="editItem('${escapeJs(item.id)}')">Edit</button>
+        <button class="danger" onclick="deleteItem('${escapeJs(item.id)}')">Delete</button>
+      </div>
+    `;
+
+    row.addEventListener("dragstart",()=>row.classList.add("dragging"));
+    row.addEventListener("dragend",()=>row.classList.remove("dragging"));
+    row.addEventListener("dragover",(e)=>{
+      e.preventDefault();
+      const dragging=document.querySelector(".dragging");
+      if(dragging && dragging!==row){
+        const rect=row.getBoundingClientRect();
+        const after=e.clientY > rect.top + rect.height/2;
+        row.parentNode.insertBefore(dragging, after ? row.nextSibling : row);
+      }
+    });
+
+    list.appendChild(row);
+  });
+}
+
+function moveItem(index,direction){
+  const newIndex=index+direction;
+  if(newIndex<0 || newIndex>=software.length)return;
+  const temp=software[index];
+  software[index]=software[newIndex];
+  software[newIndex]=temp;
+  renderList();
+}
+
+function getDomOrder(){
+  return [...document.querySelectorAll(".item")].map(x=>x.dataset.id);
+}
+
+async function saveOrder(){
+  const ids=getDomOrder();
+
+  if(!ids.length){
+    showStatus("List empty.",false);
+    return;
+  }
+
+  try{
+    await post({action:"reorder",ids});
+    showStatus("Order saved.");
+    await loadSoftware();
+  }catch(err){
+    showStatus("Order save failed: "+err.message,false);
+  }
+}
+
+async function saveSoftware(){
+  const name=$("name").value.trim();
+  const url=$("url").value.trim();
+  const category=$("category").value;
+  const description=$("description").value.trim();
+
+  if(!name || !url){
+    showStatus("Name এবং URL দিতে হবে।",false);
+    return;
+  }
+
+  const item={
+    name,
+    url,
+    category,
+    description
+  };
+
+  try{
+    if(editingId){
+      await post({
+        action:"edit",
+        id:editingId,
+        item
+      });
+      showStatus("Software updated.");
+    }else{
+      item.id=makeId(name);
+      await post({
+        action:"add",
+        item
+      });
+      showStatus("Software added.");
+    }
+
+    clearForm();
+    await loadSoftware();
+  }catch(err){
+    showStatus("Save failed: "+err.message,false);
+  }
+}
+
+function editItem(id){
+  const item=software.find(x=>String(x.id)===String(id));
+  if(!item)return;
+
+  editingId=id;
+  $("formTitle").textContent="Edit Software";
+  $("saveBtn").textContent="Update Software";
+  $("cancelBtn").classList.remove("hidden");
+
+  $("name").value=item.name||"";
+  $("url").value=item.url||"";
+  $("category").value=item.category||"utility";
+  $("description").value=item.description||"";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+async function deleteItem(id){
+  const item=software.find(x=>String(x.id)===String(id));
+  if(!item)return;
+
+  if(!confirm("Delete '"+item.name+"' ?"))return;
+
+  try{
+    await post({
+      action:"delete",
+      id:id
+    });
+
+    showStatus("Software deleted.");
+    await loadSoftware();
+  }catch(err){
+    showStatus("Delete failed: "+err.message,false);
+  }
+}
+
+function cancelEdit(){
+  clearForm();
+}
+
+function clearForm(){
+  editingId=null;
+  $("formTitle").textContent="Add Software";
+  $("saveBtn").textContent="Add Software";
+  $("cancelBtn").classList.add("hidden");
+  $("name").value="";
+  $("url").value="";
+  $("category").value="utility";
+  $("description").value="";
+}
+
+function makeId(name){
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g,"-")
+    .replace(/^-+|-+$/g,"")
+    +"_"+Date.now();
+}
+
+function escapeHtml(value){
+  return String(value??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function escapeJs(value){
+  return String(value??"")
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'")
+    .replace(/\n/g,"\\n")
+    .replace(/\r/g,"\\r");
+}
+
+function login(){
+  const pass=$("loginPassword").value;
+
+  if(pass===ADMIN_PASSWORD){
+    sessionStorage.setItem("mysoftwere_admin_login","1");
+    $("loginBox").classList.add("hidden");
+    $("app").classList.remove("hidden");
+    loadSoftware();
+  }else{
+    $("loginStatus").textContent="Wrong password";
+    $("loginStatus").style.color="#c62828";
+  }
+}
+
+function logout(){
+  sessionStorage.removeItem("mysoftwere_admin_login");
+  location.reload();
+}
+
+window.addEventListener("load",()=>{
+  if(sessionStorage.getItem("mysoftwere_admin_login")==="1"){
+    $("loginBox").classList.add("hidden");
+    $("app").classList.remove("hidden");
+    loadSoftware();
+  }
+});
 </script>
+
 </body>
 </html>
